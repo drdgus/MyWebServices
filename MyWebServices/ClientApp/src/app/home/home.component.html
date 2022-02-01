@@ -1,0 +1,14 @@
+<div class="">
+  {{fileName || "No file uploaded yet."}}
+
+  <button [disabled]="isProcessing" (click)="fileUpload.click()" class="btn btn-secondary mr-3">
+    <span>Загрузить файл</span>
+  </button>
+  <input type="file" style="display: none"
+         (change)="onFileSelected($event)" #fileUpload>
+
+  <button [disabled]="isFileEmpty" (click)="processFile()" class="btn btn-success">Обработать</button>
+</div>
+<div>
+  <pre style="white-space: pre-wrap;">{{convertedText}}</pre>
+</div>
