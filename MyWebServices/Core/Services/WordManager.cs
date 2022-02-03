@@ -1,4 +1,4 @@
-﻿using MyWebServices.Core.Extensions;
+﻿using MyWebServices.Core.DataAccess.Entities;
 using MyWebServices.Core.Models;
 using NPOI.XWPF.UserModel;
 using System.Text;
@@ -8,27 +8,26 @@ namespace MyWebServices.Core.Services
     public class WordManager
     {
         private XWPFDocument _wordDocument = new();
+        private ConvertedParagraphsInfo _convertedParagraphsInfo = new();
+        private UserSettings _userSettings;
 
-        public WordManager(Stream stream)
+        public WordManager(Stream stream, UserSettings userSettings)
         {
+            _userSettings = userSettings;
             stream.Position = 0;
             _wordDocument = new XWPFDocument(stream);
-
-            //Использовать IEnumerator 
         }
 
         public string GetCovertedText()
         {
             var convertedText = new StringBuilder();
+            convertedText.AppendLine(GetElementsBeforeText());
 
-            convertedText.AppendLine(Settings.PreviewImageElement);
+            _wordDocument.BodyElements
+                .ToList()
+                .ForEach(el => convertedText.AppendLine(ConvertElement(el)));
 
-            _wordDocument.BodyElements.ToList().ForEach(el =>
-            {
-                convertedText.AppendLine(ConvertElement(el));
-            });
-
-            convertedText.AppendLine(Settings.GalleryElement);
+            convertedText.AppendLine(GetElementsAfterText());
 
             return convertedText.ToString();
         }
@@ -47,7 +46,6 @@ namespace MyWebServices.Core.Services
             return strBuilder.ToString();
         }
 
-        private ConvertedParagraphsInfo _convertedParagraphsInfo = new();
         private string ConvertParagraph(XWPFParagraph paragraph)
         {
             if (paragraph.IsEmpty) return string.Empty;
@@ -55,15 +53,7 @@ namespace MyWebServices.Core.Services
 
             var strBulder = new StringBuilder();
 
-            if(
-                (_convertedParagraphsInfo.CutElementInserted == false &&
-                ParagraphIsList(paragraph) &&
-                _convertedParagraphsInfo.LastIsNumbering == false) 
-                ||
-                (_convertedParagraphsInfo.CutElementInserted == false &&
-                _convertedParagraphsInfo.TextLength + paragraph.ParagraphText.Length >= Settings.TextLengthBeforeCut && 
-                _convertedParagraphsInfo.LastIsNumbering == false)
-              )
+            if (IsCutElementNotInserted(paragraph))
             {
                 _convertedParagraphsInfo.CutElementInserted = true;
                 strBulder.AppendLine(Settings.CutElement);
@@ -74,20 +64,17 @@ namespace MyWebServices.Core.Services
 
             var alignment = GetAlignment(paragraph.Alignment);
 
-            if(TryConvertToList(paragraph, out string text))
+            if (TryConvertToList(paragraph, out string convertedListElement))
             {
-                strBulder.Append(text); //<ul...> // <li>{paragraph.ParagraphText}</li> // </ul...>
+                strBulder.Append(convertedListElement);
 
-                if (_convertedParagraphsInfo.LastIsNumbering == false)
+                if (_convertedParagraphsInfo.IsLastNumbering == false)
                 {
                     strBulder.Append(GetText());
                     return strBulder.ToString();
                 }
             }
-            else
-            {
-                strBulder.Append(GetText());
-            }
+            else strBulder.Append(GetText());
 
             return strBulder.ToString();
 
@@ -95,6 +82,23 @@ namespace MyWebServices.Core.Services
             {
                 return Settings.CreateParagraph(paragraph.ParagraphText, alignment);
             }
+        }
+
+        private bool IsCutElementNotInserted(XWPFParagraph paragraph)
+        {
+            if (IsParagraphList(paragraph) &&
+                _convertedParagraphsInfo.CutElementInserted == false &&
+                _convertedParagraphsInfo.IsLastNumbering == false)
+            {
+                return true;
+            }
+            else if (_convertedParagraphsInfo.CutElementInserted == false &&
+                    _convertedParagraphsInfo.TextLength + paragraph.ParagraphText.Length >= Settings.TextLengthBeforeCut &&
+                    _convertedParagraphsInfo.IsLastNumbering == false)
+            {
+                return true;
+            }
+            return false;
         }
 
         private string ConvertTable(XWPFTable table)
@@ -110,14 +114,14 @@ namespace MyWebServices.Core.Services
         private bool TryConvertToList(XWPFParagraph paragraph, out string text)
         {
             var strBulder = new StringBuilder();
-            var isParagraphList = ParagraphIsList(paragraph);
-            
+            var isParagraphList = this.IsParagraphList(paragraph);
+
             if (paragraph.GetNumFmt() != null)
             {
-                _convertedParagraphsInfo.LastListType = paragraph.GetNumFmt().Contains("bullet") ? "ul" : "ol";
+                _convertedParagraphsInfo.LastListNumberingType = paragraph.GetNumFmt().Contains("bullet") ? "ul" : "ol";
             }
 
-            if (isParagraphList == false && _convertedParagraphsInfo.LastIsNumbering == false)
+            if (isParagraphList == false && _convertedParagraphsInfo.IsLastNumbering == false)
             {
                 text = string.Empty;
                 return false;
@@ -125,26 +129,26 @@ namespace MyWebServices.Core.Services
 
             if (isParagraphList == true)
             {
-                if (_convertedParagraphsInfo.LastIsNumbering == false)
+                if (_convertedParagraphsInfo.IsLastNumbering == false)
                 {
-                    _convertedParagraphsInfo.LastIsNumbering = true;
-                    strBulder.AppendLine($"<{Settings.GetListHeader(_convertedParagraphsInfo.LastListType)}>");
+                    _convertedParagraphsInfo.IsLastNumbering = true;
+                    strBulder.AppendLine($"<{Settings.GetListHeader(_convertedParagraphsInfo.LastListNumberingType)}>");
                 }
                 strBulder.Append($"<li>{paragraph.ParagraphText}</li>");
             }
 
-            if (_convertedParagraphsInfo.LastIsNumbering && isParagraphList == false)
+            if (_convertedParagraphsInfo.IsLastNumbering && isParagraphList == false)
             {
-                strBulder.AppendLine($"</{_convertedParagraphsInfo.LastListType}>");
-                _convertedParagraphsInfo.LastIsNumbering = false;
+                strBulder.AppendLine($"</{_convertedParagraphsInfo.LastListNumberingType}>");
+                _convertedParagraphsInfo.IsLastNumbering = false;
             }
 
-            text = strBulder.ToString();
+            text = strBulder.ToString();  //<ul...> // <li>{paragraph.ParagraphText}</li> // </ul...>
 
             return true;
         }
 
-        private bool ParagraphIsList(XWPFParagraph paragraph)
+        private bool IsParagraphList(XWPFParagraph paragraph)
         {
             return !string.IsNullOrWhiteSpace(paragraph.GetNumFmt());
         }
@@ -159,6 +163,16 @@ namespace MyWebServices.Core.Services
                 ParagraphAlignment.BOTH => string.Empty,
                 _ => alignment.ToString()
             };
+        }
+
+        private string GetElementsBeforeText()
+        {
+            return Settings.PreviewImageElement;
+        }
+
+        private string GetElementsAfterText()
+        {
+            return Settings.GalleryElement;
         }
     }
 }

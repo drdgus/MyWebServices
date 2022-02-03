@@ -5,7 +5,7 @@
         public int Count { get; set; }
         public int TextLength { get; set; }
         public bool CutElementInserted { get; set; }
-        public bool LastIsNumbering { get; set; }
-        public string LastListType { get; set; }
+        public bool IsLastNumbering { get; set; }
+        public string LastListNumberingType { get; set; }
     }
 }
