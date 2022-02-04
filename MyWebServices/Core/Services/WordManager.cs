@@ -21,13 +21,13 @@ namespace MyWebServices.Core.Services
         public string GetCovertedText()
         {
             var convertedText = new StringBuilder();
-            convertedText.AppendLine(GetElementsBeforeText());
+            convertedText.AppendLine(_userSettings.GetElementsBeforeText());
 
             _wordDocument.BodyElements
                 .ToList()
                 .ForEach(el => convertedText.AppendLine(ConvertElement(el)));
 
-            convertedText.AppendLine(GetElementsAfterText());
+            convertedText.AppendLine(_userSettings.GetElementsAfterText());
 
             return convertedText.ToString();
         }
@@ -56,7 +56,7 @@ namespace MyWebServices.Core.Services
             if (IsCutElementNotInserted(paragraph))
             {
                 _convertedParagraphsInfo.CutElementInserted = true;
-                strBulder.AppendLine(Settings.CutElement);
+                strBulder.AppendLine(_userSettings.CutElement);
             }
 
             _convertedParagraphsInfo.Count++;
@@ -80,7 +80,7 @@ namespace MyWebServices.Core.Services
 
             string GetText()
             {
-                return Settings.CreateParagraph(paragraph.ParagraphText, alignment);
+                return _userSettings.CreateParagraph(paragraph.ParagraphText, alignment);
             }
         }
 
@@ -93,7 +93,7 @@ namespace MyWebServices.Core.Services
                 return true;
             }
             else if (_convertedParagraphsInfo.CutElementInserted == false &&
-                    _convertedParagraphsInfo.TextLength + paragraph.ParagraphText.Length >= Settings.TextLengthBeforeCut &&
+                    _convertedParagraphsInfo.TextLength + paragraph.ParagraphText.Length >= _userSettings.TextLengthBeforeCut &&
                     _convertedParagraphsInfo.IsLastNumbering == false)
             {
                 return true;
@@ -132,7 +132,7 @@ namespace MyWebServices.Core.Services
                 if (_convertedParagraphsInfo.IsLastNumbering == false)
                 {
                     _convertedParagraphsInfo.IsLastNumbering = true;
-                    strBulder.AppendLine($"<{Settings.GetListHeader(_convertedParagraphsInfo.LastListNumberingType)}>");
+                    strBulder.AppendLine($"<{_userSettings.GetListHeader(_convertedParagraphsInfo.LastListNumberingType)}>");
                 }
                 strBulder.Append($"<li>{paragraph.ParagraphText}</li>");
             }
@@ -158,21 +158,11 @@ namespace MyWebServices.Core.Services
             return alignment switch
             {
                 ParagraphAlignment.LEFT => string.Empty,
-                ParagraphAlignment.CENTER => Settings.ParagraphCenterAlignClass,
+                ParagraphAlignment.CENTER => _userSettings.ParagraphCenterAlignClass,
                 ParagraphAlignment.RIGHT => string.Empty,
                 ParagraphAlignment.BOTH => string.Empty,
                 _ => alignment.ToString()
             };
-        }
-
-        private string GetElementsBeforeText()
-        {
-            return Settings.PreviewImageElement;
-        }
-
-        private string GetElementsAfterText()
-        {
-            return Settings.GalleryElement;
         }
     }
 }

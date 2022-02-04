@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using MyWebServices.Core.DataAccess;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddCors();
+builder.Services.AddDbContext<ParagraphsDbContext>(options =>
+  options.UseSqlite("Filename=paragraphs.db"));
 
 
 var app = builder.Build();
@@ -16,6 +20,15 @@ if (!app.Environment.IsDevelopment())
 {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<ParagraphsDbContext>();
+    context.Database.EnsureCreated();
+    DbInitializer.Initialize(context);
 }
 
 app.UseHttpsRedirection();

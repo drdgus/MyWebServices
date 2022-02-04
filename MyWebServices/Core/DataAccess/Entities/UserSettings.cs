@@ -1,22 +1,65 @@
-﻿namespace MyWebServices.Core.DataAccess.Entities
+﻿using System.Text.RegularExpressions;
+
+namespace MyWebServices.Core.DataAccess.Entities
 {
     public class UserSettings
     {
-        public string[][] ElementsBeforeText { get; set; } = new string[][] { new string[] { "labels" },
-                                                                              new string[] { "<span>labelText</span>" } };
-        public string[][] ElementsAfterText { get; set; } = new string[][] { new string[] { "comments" },
-                                                                             new string[] { "<input type='text'>lorem</input>" } };
+        public int Id { get; set; }
+        public int UserId { get; set; }
 
-        public int TextLengthBeforeCut { get; set; } = 400;
-        public string CutElement { get; set; } = "<div class=''>$CUT$</div>";
+        public List<UserPattern> UserPatterns { get; set; }
+        public List<CustomUserElement> SharedCustomUserElements { get; set;  }
 
-        public string ParagraphElement { get; set; } = "<p class='text'>{$ParagraphText$}</p>";
-        public string ParagraphCenterAlignClass { get; set; } = "centertext";
+        public int TextLengthBeforeCut { get; set; }
+        public string CutElement { get; set; }
 
-        public string ListElement { get; set; } = "<{$list$} class='list'>";
+        public string ParagraphElement { get; set; }
+        public string ParagraphCenterAlignClass { get; set; }
+
+        public string ListElement { get; set; }
 
 
-        public string PreviewImageElement { get; set; } = "<img class='photo' src='https://44-563-webapps-f21.github.io/webapps-f21-assignment-6-AbdulRehmanSayeed/owl.png' alt='owlImg'>";
-        public string GalleryElement { get; set; } = "<div class='Gallery'><a href='ссылка на альбом'>Фотоальбом</a></div>";
+        public string PreviewImageElement { get; set; }
+        public string GalleryElement { get; set; }
+
+        /// <summary>
+        /// Формирование тега абзаца по шаблону пользователя
+        /// </summary>
+        /// <param name="classes"></param>
+        /// <param name="text"></param>
+        /// <returns>тег абзаца с параметрами и текстом</returns>
+        public string CreateParagraph(string text, string classes = default)
+        {
+            var paragraph = ParagraphElement;
+            if (string.IsNullOrWhiteSpace(classes) == false)
+                paragraph = Regex.Replace(paragraph, "class='*'", $"class='{classes} ");
+
+            paragraph = Regex.Replace(paragraph, @"{\$ParagraphText\$}", text);
+
+            return paragraph;
+        }
+
+        /// <summary>
+        /// Формирование тега списка по шаблону пользователя
+        /// </summary>
+        /// <param name="listType">тип списка, нумерованный, маркированный и т.д.</param>
+        /// <returns>параметры открывающей части тега списка</returns>
+        public string GetListHeader(string listType)
+        {
+            var listHeader = string.Empty;
+            listHeader = Regex.Match(ListElement, @"{\$list\$} class='.*'").Value;
+            listHeader = Regex.Replace(listHeader, @"{\$list\$}", listType);
+            return listHeader;
+        }
+
+        public string GetElementsBeforeText()
+        {
+            return PreviewImageElement;
+        }
+
+        public string GetElementsAfterText()
+        {
+            return GalleryElement;
+        }
     }
 }
