@@ -1,5 +1,4 @@
-﻿using MyWebServices.Core.DataAccess.Entities;
-using MyWebServices.Core.Models;
+﻿using MyWebServices.Core.Models;
 using NPOI.XWPF.UserModel;
 using System.Text;
 
@@ -28,6 +27,8 @@ namespace MyWebServices.Core.Services
                 .ForEach(el => convertedText.AppendLine(ConvertElement(el)));
 
             convertedText.AppendLine(_userSettings.GetElementsAfterText());
+
+            _userSettings.GetTemplateElements().ForEach(templateEl => convertedText.Replace(templateEl.TemplateValue, templateEl.Value));
 
             return convertedText.ToString();
         }
@@ -84,6 +85,16 @@ namespace MyWebServices.Core.Services
             }
         }
 
+        private string ConvertTable(XWPFTable table)
+        {
+            var strBuilder = new StringBuilder();
+            table.Rows
+                .ForEach(row => row.GetTableCells()
+                    .ForEach(cell => cell.BodyElements.ToList()
+                        .ForEach(el => strBuilder.AppendLine(ConvertElement(el)))));
+            return strBuilder.ToString();
+        }
+
         private bool IsCutElementNotInserted(XWPFParagraph paragraph)
         {
             if (IsParagraphList(paragraph) &&
@@ -99,16 +110,6 @@ namespace MyWebServices.Core.Services
                 return true;
             }
             return false;
-        }
-
-        private string ConvertTable(XWPFTable table)
-        {
-            var strBuilder = new StringBuilder();
-            table.Rows
-                .ForEach(row => row.GetTableCells()
-                    .ForEach(cell => cell.BodyElements.ToList()
-                        .ForEach(el => strBuilder.AppendLine(ConvertElement(el)))));
-            return strBuilder.ToString();
         }
 
         private bool TryConvertToList(XWPFParagraph paragraph, out string text)

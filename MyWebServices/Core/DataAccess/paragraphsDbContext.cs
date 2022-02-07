@@ -8,12 +8,13 @@ namespace MyWebServices.Core.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<CustomUserElement> CustomUserElements { get; set; }
         public DbSet<UserPattern> UsersPatterns { get; set; }
-        public DbSet<UserSettings> UsersSettings { get; set; }
+        public DbSet<UserSettingsEntity> UsersSettings { get; set; }
 
-        public ParagraphsDbContext(DbContextOptions<ParagraphsDbContext> options): base(options){ }
+        public ParagraphsDbContext(DbContextOptions<ParagraphsDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<Course>().ToTable("Course");
         }
     }
+}

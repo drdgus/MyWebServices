@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyWebServices.Core.DataAccess.Entities;
+﻿using MyWebServices.Core.DataAccess.Entities;
 
 namespace MyWebServices.Core.DataAccess
 {
@@ -22,13 +21,17 @@ namespace MyWebServices.Core.DataAccess
             context.Users.AddRange(users);
             context.SaveChanges();
 
-            var settings = new UserSettings[]
+            var settings = new UserSettingsEntity[]
             {
-                new UserSettings
+                new UserSettingsEntity
                 {
                     UserId = 1,
                     UserPatterns = new List<UserPattern>
                     {
+                        new UserPattern
+                        {
+                            Name = "Без доп. элементов"
+                        },
                         new UserPattern
                         {
                             Name = "Пожарная безопасность",
@@ -37,8 +40,14 @@ namespace MyWebServices.Core.DataAccess
                                 new CustomUserElement
                                 {
                                     Name = "Ссылка на оф сайт пожарной части Богучан",
-                                    ReplaceValue = "{{URL_Firehouse}}",
-                                    Value = "URL TO Firehouse Site."
+                                    Value = "URL TO Firehouse Site before text.",
+                                    ElementSotringOrder = CustomUserElement.SortingOrder.BeforeText
+                                },
+                                new CustomUserElement
+                                {
+                                    Name = "Ссылка на документы школы",
+                                    TemplateValue = "$$Documents",
+                                    Value = "URL TO Documents section."
                                 }
                             }
                         }
@@ -47,15 +56,15 @@ namespace MyWebServices.Core.DataAccess
                     {
                         new CustomUserElement
                         {
-                            Name = "Ссылка на оф сайт пожарной части Богучан",
-                            Value = "URL TO Firehouse Site.",
-                            ElementSotringOrder = CustomUserElement.SortingOrder.BeforeText
+                            Name = "Картинка перед текстом",
+                            ElementSotringOrder = CustomUserElement.SortingOrder.BeforeText,
+                            Value = "<img class='photo' src='https://44-563-webapps-f21.github.io/webapps-f21-assignment-6-AbdulRehmanSayeed/owl.png' alt='owlImg'>"
                         },
                         new CustomUserElement
                         {
-                            Name = "Ссылка на документы школы",
-                            ReplaceValue = "$$Documents",
-                            Value = "URL TO Documents section."
+                            Name = "Альбом",
+                            ElementSotringOrder = CustomUserElement.SortingOrder.AfterText,
+                            Value = "<div class='Gallery'><a href='ссылка на альбом'>Фотоальбом</a></div>"
                         }
                     },
                     TextLengthBeforeCut = 400,
@@ -63,8 +72,6 @@ namespace MyWebServices.Core.DataAccess
                     ParagraphElement  = "<p class='text'>{$ParagraphText$}</p>",
                     ParagraphCenterAlignClass = "centertext",
                     ListElement  = "<{$list$} class='list'>",
-                    PreviewImageElement  = "<img class='photo' src='https://44-563-webapps-f21.github.io/webapps-f21-assignment-6-AbdulRehmanSayeed/owl.png' alt='owlImg'>",
-                    GalleryElement = "<div class='Gallery'><a href='ссылка на альбом'>Фотоальбом</a></div>"
                 }
             };
 

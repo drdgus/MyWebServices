@@ -50,7 +50,7 @@ export class HomeComponent {
       redirect: 'follow',
     };
 
-    fetch("https://localhost:7078/api/v1/WordConvert/process-file", requestOptions)
+    fetch("https://localhost:8083/api/v1/WordConvert/process-file", requestOptions)
       .then(response => response.text())
       .then(result => this.convertedText = result)
       .catch(error => console.log('error', error));

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyWebServices.Core.DataAccess.Repositories;
 using MyWebServices.Core.Services;
 
 namespace MyWebServices.Controllers
@@ -8,10 +9,12 @@ namespace MyWebServices.Controllers
     public class WordConvertController : ControllerBase
     {
         private readonly ILogger<WordConvertController> _logger;
+        private readonly UserRepository _userRepository;
 
-        public WordConvertController(ILogger<WordConvertController> logger)
+        public WordConvertController(ILogger<WordConvertController> logger, UserRepository userRepository)
         {
             _logger = logger;
+            _userRepository = userRepository;
         }
 
         [HttpPost("process-file")]
@@ -28,7 +31,7 @@ namespace MyWebServices.Controllers
                 memoryStream.WriteByte((byte)b);
             }
            
-            var wordManager = new WordManager(memoryStream);
+            var wordManager = new WordManager(memoryStream, _userRepository.GetUserSettings(1, 2));
             var convertedText = wordManager.GetCovertedText();
 
             _logger.LogInformation($"File uploaded and converted. Converted text: {convertedText}");

@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using MyWebServices.Core.DataAccess;
 using System.Text;
+using MyWebServices.Core.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddCors();
 builder.Services.AddDbContext<ParagraphsDbContext>(options =>
   options.UseSqlite("Filename=paragraphs.db"));
+builder.Services.AddTransient<UserRepository>();
 
 
 var app = builder.Build();
