@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyWebServices.Core.DataAccess.Repositories;
+using MyWebServices.Core.Models;
 using MyWebServices.Core.Services;
 
 namespace MyWebServices.Controllers
@@ -31,11 +32,24 @@ namespace MyWebServices.Controllers
                 memoryStream.WriteByte((byte)b);
             }
            
-            var wordManager = new WordManager(memoryStream, _userRepository.GetUserSettings(1, 2));
+            var wordManager = new WordManager(memoryStream, _userRepository.GetUserSettings(1, 1));
             var convertedText = wordManager.GetCovertedText();
 
             _logger.LogInformation($"File uploaded and converted. Converted text: {convertedText}");
             return Ok(convertedText);
+        }
+
+        [HttpGet("settings")]
+        public IActionResult Get()
+        {
+            return Ok(_userRepository.GetUserSettingsForView(1));
+        }
+
+        [HttpPatch("settings/save")]
+        public IActionResult Patch(UserSettings userSettings)
+        {
+
+            return Ok("NotImplementedMethod");
         }
     }
 }
