@@ -18,8 +18,8 @@ namespace MyWebServices.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpPost("process-file")]
-        public IActionResult Post(IFormFile File)
+        [HttpPost("process-file/{patternId}")]
+        public IActionResult Post(IFormFile File, int patternId)
         {
             if (File.Length == 0) return BadRequest("Пустой файл.");
 
@@ -32,8 +32,8 @@ namespace MyWebServices.Controllers
                 memoryStream.WriteByte((byte)b);
             }
            
-            var wordManager = new WordManager(memoryStream, _userRepository.GetUserSettings(1, 1));
-            var convertedText = wordManager.GetCovertedText();
+            var wordManager = new WordManager(memoryStream, _userRepository.GetUserSettings(1, patternId));
+            var convertedText = wordManager.GetConvertedText();
 
             _logger.LogInformation($"File uploaded and converted. Converted text: {convertedText}");
             return Ok(convertedText);

@@ -1,0 +1,75 @@
+<div>
+  <span>Стандартные элементы</span>
+  <div>
+    <span>Количество символов перед CUT</span>
+    <input type="number" [(ngModel)]="userSettings.textLengthBeforeCut" />
+  </div>
+  <div>
+    <span>CUT</span>
+    <input type="text" [(ngModel)]="userSettings.cutElement" />
+  </div>
+  <div>
+    <span>Абзац</span>
+    <input type="text" [(ngModel)]="userSettings.paragraphElement" />
+  </div>
+  <div>
+    <span>Класс для абзацев по центру</span>
+    <input type="text" [(ngModel)]="userSettings.paragraphCenterAlignClass" />
+  </div>
+  <div>
+    <span>Нумерованный\маркированный список</span>
+    <input type="text" [(ngModel)]="userSettings.listElement" />
+  </div>
+
+  <div>
+    <span>Общие для всех шаблонов элементы</span>
+
+    <div *ngFor="let customUserElement of userSettings.sharedCustomUserElements">
+      <div>
+        <span>Название</span>
+        <input type="text" [(ngModel)]="customUserElement.name" />
+
+        <span>Значение</span>
+        <input type="text" [(ngModel)]="customUserElement.value" />
+
+        <span>Заменяемый шаблон</span>
+        <input type="text" [(ngModel)]="customUserElement.templateValue"/>
+
+        <span>Положение в тексте</span>
+        <select [disabled]="customUserElement.withoutTemplate">
+          <option>Перед текстом</option>
+          <option>После текста</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <span>Шаблоны</span>
+    <select class="form-select" [(ngModel)]="selectedPattern" (change)="onPatternChange()">
+      <option *ngFor="let userPattern of userSettings.userPatterns" [value]="userPattern">{{userPattern.name}}</option>
+    </select>
+
+    <span>Кастомные элементы для шаблона</span>
+    <div *ngFor="let customUserElement of selectedPattern.customUserElementsForPattern">
+      <div>
+        <span>Название</span>
+        <input type="text" [(ngModel)]="customUserElement.name" />
+
+        <span>Значение</span>
+        <input type="text" [(ngModel)]="customUserElement.value" />
+
+        <span>Заменяемый шаблон</span>
+        <input type="text" [(ngModel)]="customUserElement.templateValue"/>
+
+        <span>Положение в тексте</span>
+        <select [disabled]="customUserElement.withoutTemplate">
+          <option>Перед текстом</option>
+          <option>После текста</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <button (click)="saveSettings()">Save settings</button>
+</div>

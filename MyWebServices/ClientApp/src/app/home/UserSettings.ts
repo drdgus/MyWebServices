@@ -4,13 +4,13 @@ import { UserPattern } from "./UserPattern";
 export class UserSettings {
 
   public userPatterns: UserPattern[] = new Array <UserPattern>();
-  public SharedCustomUserElements: CustomUserElement[] = new Array<CustomUserElement>();
+  public sharedCustomUserElements: CustomUserElement[] = new Array<CustomUserElement>();
 
-  public TextLengthBeforeCut: number = 0;
-  public CutElement: string = '';
+  public textLengthBeforeCut: number = 0;
+  public cutElement: string = '';
 
-  public ParagraphElement: string = '';
-  public ParagraphCenterAlignClass: string = '';
+  public paragraphElement: string = '';
+  public paragraphCenterAlignClass: string = '';
 
-  public ListElement: string = '';
+  public listElement: string = '';
 }

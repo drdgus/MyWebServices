@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\home\UserSettings.ts" />
-    <None Remove="ClientApp\src\app\settings\settings.component.ts" />
   </ItemGroup>
 
   <ItemGroup>

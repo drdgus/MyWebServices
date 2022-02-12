@@ -1,7 +1,7 @@
 import { CustomUserElement } from "./CustomUserElement";
 
 export class  UserPattern {
-  public Id: number = 0;
-  public Name: string = '';
-  public CustomUserElementsForPattern: CustomUserElement[] = new Array<CustomUserElement>();
+  public id: number = 0;
+  public name: string = '';
+  public customUserElementsForPattern: CustomUserElement[] = new Array<CustomUserElement>();
 }

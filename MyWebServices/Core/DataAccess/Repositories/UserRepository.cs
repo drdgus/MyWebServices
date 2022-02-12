@@ -14,6 +14,8 @@ namespace MyWebServices.Core.DataAccess.Repositories
 
         public UserSettings GetUserSettings(int userId, int patternId)
         {
+            if (patternId == 0) patternId = 1;
+
             var settingsEntity = _context.UsersSettings
                 .Include(u => u.UserPatterns)
                 .Include(u => u.SharedCustomUserElements)
@@ -46,7 +48,7 @@ namespace MyWebServices.Core.DataAccess.Repositories
 
             var userSettings = new
             {
-                UserPattern = settingsEntity.UserPatterns,
+                UserPatterns = settingsEntity.UserPatterns,
                 SharedCustomUserElements = settingsEntity.SharedCustomUserElements,
                 CutElement = settingsEntity.CutElement,
                 TextLengthBeforeCut = settingsEntity.TextLengthBeforeCut,

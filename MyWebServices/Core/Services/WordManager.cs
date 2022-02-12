@@ -6,9 +6,9 @@ namespace MyWebServices.Core.Services
 {
     public class WordManager
     {
-        private XWPFDocument _wordDocument = new();
-        private ConvertedParagraphsInfo _convertedParagraphsInfo = new();
-        private UserSettings _userSettings;
+        private readonly XWPFDocument _wordDocument;
+        private readonly ConvertedParagraphsInfo _convertedParagraphsInfo = new();
+        private readonly UserSettings _userSettings;
 
         public WordManager(Stream stream, UserSettings userSettings)
         {
@@ -17,7 +17,7 @@ namespace MyWebServices.Core.Services
             _wordDocument = new XWPFDocument(stream);
         }
 
-        public string GetCovertedText()
+        public string GetConvertedText()
         {
             var convertedText = new StringBuilder();
             convertedText.AppendLine(_userSettings.GetElementsBeforeText());
@@ -52,12 +52,12 @@ namespace MyWebServices.Core.Services
             if (paragraph.IsEmpty) return string.Empty;
             if (paragraph.ParagraphText.Length == 0) return string.Empty;
 
-            var strBulder = new StringBuilder();
+            var strBuilder = new StringBuilder();
 
             if (IsCutElementNotInserted(paragraph))
             {
                 _convertedParagraphsInfo.CutElementInserted = true;
-                strBulder.AppendLine(_userSettings.CutElement);
+                strBuilder.AppendLine(_userSettings.CutElement);
             }
 
             _convertedParagraphsInfo.Count++;
@@ -67,17 +67,17 @@ namespace MyWebServices.Core.Services
 
             if (TryConvertToList(paragraph, out string convertedListElement))
             {
-                strBulder.Append(convertedListElement);
+                strBuilder.Append(convertedListElement);
 
                 if (_convertedParagraphsInfo.IsLastNumbering == false)
                 {
-                    strBulder.Append(GetText());
-                    return strBulder.ToString();
+                    strBuilder.Append(GetText());
+                    return strBuilder.ToString();
                 }
             }
-            else strBulder.Append(GetText());
+            else strBuilder.Append(GetText());
 
-            return strBulder.ToString();
+            return strBuilder.ToString();
 
             string GetText()
             {
@@ -114,7 +114,7 @@ namespace MyWebServices.Core.Services
 
         private bool TryConvertToList(XWPFParagraph paragraph, out string text)
         {
-            var strBulder = new StringBuilder();
+            var strBuilder = new StringBuilder();
             var isParagraphList = this.IsParagraphList(paragraph);
 
             if (paragraph.GetNumFmt() != null)
@@ -133,18 +133,18 @@ namespace MyWebServices.Core.Services
                 if (_convertedParagraphsInfo.IsLastNumbering == false)
                 {
                     _convertedParagraphsInfo.IsLastNumbering = true;
-                    strBulder.AppendLine($"<{_userSettings.GetListHeader(_convertedParagraphsInfo.LastListNumberingType)}>");
+                    strBuilder.AppendLine($"<{_userSettings.GetListHeader(_convertedParagraphsInfo.LastListNumberingType)}>");
                 }
-                strBulder.Append($"<li>{paragraph.ParagraphText}</li>");
+                strBuilder.Append($"<li>{paragraph.ParagraphText}</li>");
             }
 
             if (_convertedParagraphsInfo.IsLastNumbering && isParagraphList == false)
             {
-                strBulder.AppendLine($"</{_convertedParagraphsInfo.LastListNumberingType}>");
+                strBuilder.AppendLine($"</{_convertedParagraphsInfo.LastListNumberingType}>");
                 _convertedParagraphsInfo.IsLastNumbering = false;
             }
 
-            text = strBulder.ToString();  //<ul...> // <li>{paragraph.ParagraphText}</li> // </ul...>
+            text = strBuilder.ToString();  //<ul...> // <li>{paragraph.ParagraphText}</li> // </ul...>
 
             return true;
         }
