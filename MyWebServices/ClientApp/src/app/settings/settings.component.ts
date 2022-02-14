@@ -7,42 +7,48 @@ import { UserPattern } from '../home/UserPattern';
   selector: 'app-home',
   templateUrl: './settings.component.html',
 })
-export class SettingsComponent implements OnInit {
-
+export class SettingsComponent implements OnInit
+{
   public userSettings: UserSettings = new UserSettings();
-  public selectedPattern: UserPattern = new UserPattern();
+  public selectedPatternId: number = 0;
+  public selectedPattern: UserPattern | undefined = new UserPattern();
 
-  public constructor(private readonly http: HttpClient) { }
+  public constructor(private readonly http: HttpClient) {}
 
-  public ngOnInit(): void {
+  public ngOnInit(): void
+  {
     this.getSettings();
   }
 
   public onPatternChange()
   {
+    this.selectedPattern = this.userSettings.userPatterns.find(p => p.id == this.selectedPatternId);
   }
 
-  private getSettings(): void {
+  private getSettings(): void
+  {
     var requestOptions: object = {
       method: 'GET',
       redirect: 'follow',
     };
 
-    fetch("https://localhost:8083/api/v1/WordConvert/settings", (requestOptions) as any)
+    fetch("https://localhost/api/v1/WordConvert/settings", (requestOptions) as any)
       .then(text => text.json())
-      .then((settings: UserSettings) => {
+      .then((settings: UserSettings) =>
+      {
         this.userSettings = settings;
       });
   }
 
-  public saveSettings(): void {
+  public saveSettings(): void
+  {
     var requestOptions: object = {
       method: 'PATCH',
       body: this.userSettings,
       redirect: 'follow',
     };
 
-    fetch("https://localhost:8083/api/v1/WordConvert/settings/save", (requestOptions) as any)
+    fetch("https://localhost/api/v1/WordConvert/settings/save", (requestOptions) as any)
       .then(res => console.log("saveSettings response ok: " + res.ok))
       .catch(error => console.log("saveSettings error: " + error));
   }

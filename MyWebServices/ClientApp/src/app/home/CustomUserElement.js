@@ -3,12 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomUserElement = void 0;
 var CustomUserElement = /** @class */ (function () {
     function CustomUserElement() {
+        var _a;
         this.id = 0;
         this.name = '';
         this.value = '';
         this.templateValue = null;
         this.elementSotringOrder = null;
         this.userPatternId = null;
+        this.withoutTemplate = (this.templateValue == null || ((_a = this.templateValue) === null || _a === void 0 ? void 0 : _a.length) === 0);
     }
     return CustomUserElement;
 }());

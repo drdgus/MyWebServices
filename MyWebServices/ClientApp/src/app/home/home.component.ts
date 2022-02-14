@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
       redirect: "follow"
     };
 
-    fetch("https://localhost:8083/api/v1/WordConvert/process-file/" + this.selectedPatternId, (requestOptions) as any)
+    fetch("https://localhost/api/v1/WordConvert/process-file/" + this.selectedPatternId, (requestOptions) as any)
       .then(response => response.text())
       .then(result => this.convertedText = result)
       .catch(error => console.log('error', error));
@@ -84,7 +84,7 @@ export class HomeComponent implements OnInit {
       redirect: 'follow',
     };
 
-    fetch("https://localhost:8083/api/v1/WordConvert/settings", (requestOptions) as any)
+    fetch("https://localhost/api/v1/WordConvert/settings", (requestOptions) as any)
       .then(text => text.json())
       .then((settings: UserSettings) => {
         this.userSettings = settings;

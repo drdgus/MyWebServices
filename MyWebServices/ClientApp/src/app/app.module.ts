@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { SettingsComponent } from './settings/settings.component';
+import { CustomUserElementComponent } from './settings/customUserElement/customUserElement.component';
 
 @NgModule({
   declarations: [
