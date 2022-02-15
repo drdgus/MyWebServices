@@ -25,7 +25,7 @@
     <span>Общие для всех шаблонов элементы</span>
 
     <div *ngFor="let customUserElement of userSettings.sharedCustomUserElements">
-      <!--<customUserElement [element]="customUserElement"></customUserElement>-->
+      <customUserElement [element]="customUserElement"></customUserElement>
     </div>
   </div>
 
@@ -38,7 +38,7 @@
     <div class="mt-1">
       <span>Кастомные элементы для шаблона</span>
       <div *ngFor="let customUserElement of selectedPattern?.customUserElementsForPattern">
-        <!--<customUserElement [element]="customUserElement"></customUserElement>-->
+        <customUserElement [element]="customUserElement"></customUserElement>
       </div>
     </div>
   </div>

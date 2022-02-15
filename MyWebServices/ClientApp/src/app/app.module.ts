@@ -17,6 +17,7 @@ import { CustomUserElementComponent } from './settings/customUserElement/customU
     NavMenuComponent,
     HomeComponent,
     SettingsComponent,
+    CustomUserElementComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
