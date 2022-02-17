@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
-    <SpaProxyServerUrl>https://localhost:44425</SpaProxyServerUrl>
+    <SpaProxyServerUrl>https://192.168.1.2:8083</SpaProxyServerUrl>
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
 	<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -31,10 +31,12 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\home\UserSettings.ts" />
+    <None Remove="ClientApp\src\app\userEnvironment.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\home\UserSettings.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\userEnvironment.ts" />
   </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

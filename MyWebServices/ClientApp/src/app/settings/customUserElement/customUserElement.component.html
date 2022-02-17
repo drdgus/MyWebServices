@@ -1,12 +1,28 @@
 <div>
-  <span>Название</span>
-  <input type="text" [(ngModel)]="element.name" />
+  <div class="row g-2 mb-1">
+    <div class="col-md">
 
-  <span>Значение</span>
-  <input type="text" [(ngModel)]="element.value" />
+      <div class="form-floating">
+        <input type="text" class="form-control" [(ngModel)]="element.name" id="floatingInputName" placeholder="Name" value="Name">
+        <label for="floatingInputName">Название</label>
+      </div>
+    </div>
 
-  <span>Заменяемый шаблон</span>
-  <input type="text" [(ngModel)]="element.templateValue" />
+    <div class="col-md">
+
+      <div class="form-floating">
+        <input type="text" class="form-control" [(ngModel)]="element.templateValue" id="floatingInputTemplate" placeholder="$$Template" value="$$Template">
+        <label for="floatingInputTemplate">Заменяемый шаблон</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-floating mb-3">
+    <input type="text" class="form-control" [(ngModel)]="element.value" id="floatingInputValue" placeholder="<div>...</div>" value="<div>...</div>">
+    <label for="floatingInputValue">Значение</label>
+  </div>
+
+
 
   <span>Положение в тексте</span>
   <select [disabled]="element.withoutTemplate">

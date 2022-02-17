@@ -4,6 +4,7 @@ import {CustomUserElement} from "../../home/CustomUserElement";
 @Component({
   selector: 'customUserElement',
   templateUrl: './customUserElement.component.html',
+  styleUrls: ['./customUserElement.component.scss'],
   inputs: ['element']
 })
 

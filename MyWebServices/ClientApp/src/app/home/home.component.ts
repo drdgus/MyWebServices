@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, Observer } from "rxjs";
 import { UserPattern } from './UserPattern';
 import { UserSettings } from './UserSettings';
+import { API_URL } from "../userEnvironment";
 
 @Component({
   selector: "app-home",
@@ -72,7 +73,7 @@ export class HomeComponent implements OnInit {
       redirect: "follow"
     };
 
-    fetch("https://localhost/api/v1/WordConvert/process-file/" + this.selectedPatternId, (requestOptions) as any)
+    fetch(API_URL + "/api/v1/WordConvert/process-file/" + this.selectedPatternId, (requestOptions) as any)
       .then(response => response.text())
       .then(result => this.convertedText = result)
       .catch(error => console.log('error', error));
@@ -84,7 +85,7 @@ export class HomeComponent implements OnInit {
       redirect: 'follow',
     };
 
-    fetch("https://localhost/api/v1/WordConvert/settings", (requestOptions) as any)
+    fetch(API_URL + "/api/v1/WordConvert/settings", (requestOptions) as any)
       .then(text => text.json())
       .then((settings: UserSettings) => {
         this.userSettings = settings;

@@ -1,25 +1,60 @@
 <div>
-  <span>Стандартные элементы</span>
-  <div>
-    <span>Количество символов перед CUT</span>
-    <input type="number" [(ngModel)]="userSettings.textLengthBeforeCut" />
+  <div class="d-grid gap-2 w-50">
+
+    <span>Стандартные элементы</span>
+
+    <div class="form-floating">
+      <input type="number" class="form-control" [(ngModel)]="userSettings.textLengthBeforeCut" id="floatingInputtextLengthBeforeCut" placeholder="_" value="_">
+      <label for="floatingInputtextLengthBeforeCut">Количество символов перед CUT</label>
+    </div>
+
+    <div class="form-floating">
+      <input type="text" class="form-control" [(ngModel)]="userSettings.cutElement" id="floatingInputcutElement" placeholder="_" value="_">
+      <label for="floatingInputcutElement">CUT</label>
+    </div>
+
+    <div class="form-floating">
+      <input type="text" class="form-control" [(ngModel)]="userSettings.paragraphElement" id="floatingInputparagraphElement" placeholder="_" value="_">
+      <label for="floatingInputparagraphElement">Абзац</label>
+    </div>
+
+    <div class="form-floating">
+      <input type="text" class="form-control" [(ngModel)]="userSettings.paragraphCenterAlignClass" id="floatingInputparagraphCenterAlignClass" placeholder="_" value="_">
+      <label for="paragraphCenterAlignClass">Класс для абзацев по центру</label>
+    </div>
+
+    <div class="form-floating">
+      <input type="text" class="form-control" [(ngModel)]="userSettings.listElement" id="floatingInputlistElement" placeholder="_" value="_">
+      <label for="floatingInputlistElement">Нумерованный\маркированный список</label>
+    </div>
   </div>
-  <div>
-    <span>CUT</span>
-    <input type="text" [(ngModel)]="userSettings.cutElement" />
-  </div>
-  <div>
-    <span>Абзац</span>
-    <input type="text" [(ngModel)]="userSettings.paragraphElement" />
-  </div>
-  <div>
-    <span>Класс для абзацев по центру</span>
-    <input type="text" [(ngModel)]="userSettings.paragraphCenterAlignClass" />
-  </div>
-  <div>
-    <span>Нумерованный\маркированный список</span>
-    <input type="text" [(ngModel)]="userSettings.listElement" />
-  </div>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Название</th>
+        <th scope="col">Значение</th>
+        <th scope="col">Шаблон</th>
+        <th scope="col">Приоритет</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let customUserElement of userSettings.sharedCustomUserElements">
+        <th scope="row">
+          <input type="text" value="{{customUserElement.name}}"/>
+        </th>
+        <td>
+          <input type="text" value="{{customUserElement.value}}"/>
+        </td>
+        <td>
+          <input type="text" value="{{customUserElement.templateValue}}"/>
+        </td>
+        <td>
+          {{customUserElement.elementSotringOrder}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div>
     <span>Общие для всех шаблонов элементы</span>

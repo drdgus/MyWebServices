@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserSettings } from "../home/UserSettings";
 import { UserPattern } from '../home/UserPattern';
+import { API_URL } from "../userEnvironment";
 
 @Component({
   selector: 'app-home',
@@ -32,7 +33,7 @@ export class SettingsComponent implements OnInit
       redirect: 'follow',
     };
 
-    fetch("https://localhost/api/v1/WordConvert/settings", (requestOptions) as any)
+    fetch(API_URL + "/api/v1/WordConvert/settings", (requestOptions) as any)
       .then(text => text.json())
       .then((settings: UserSettings) =>
       {
@@ -48,7 +49,7 @@ export class SettingsComponent implements OnInit
       redirect: 'follow',
     };
 
-    fetch("https://localhost/api/v1/WordConvert/settings/save", (requestOptions) as any)
+    fetch(API_URL + "/api/v1/WordConvert/settings/save", (requestOptions) as any)
       .then(res => console.log("saveSettings response ok: " + res.ok))
       .catch(error => console.log("saveSettings error: " + error));
   }

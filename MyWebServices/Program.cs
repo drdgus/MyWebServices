@@ -5,12 +5,24 @@ using System.Text;
 using MyWebServices.Core.DataAccess.Repositories;
 using System;
 
+//var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    //options.AddPolicy(name: MyAllowSpecificOrigins,
+    //    builder =>
+    //    {
+    //        builder.WithOrigins("https://paragraphs.drdgus.keenetic.pro/", 
+    //            "https://api.drdgus.keenetic.pro");
+    //    });
+});
+
 builder.Services.AddDbContext<ParagraphsDbContext>(options =>
   options.UseSqlite("Filename=paragraphs.db"));
 builder.Services.AddTransient<UserRepository>();
@@ -21,7 +33,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -34,10 +46,16 @@ using (var scope = app.Services.CreateScope())
     DbInitializer.Initialize(context);
 }
 
+//app.UseCors(MyAllowSpecificOrigins);
+app.UseCors(cors =>
+{
+    cors.AllowAnyOrigin();
+    cors.AllowAnyHeader();
+    cors.AllowAnyMethod();
+});
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseCors(builder => builder.AllowAnyOrigin());
 
 app.Use(async (context, next) =>
 {
