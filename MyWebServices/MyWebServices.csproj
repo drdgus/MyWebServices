@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
-    <SpaProxyServerUrl>https://192.168.1.2:8083</SpaProxyServerUrl>
+    <SpaProxyServerUrl>https://localhost:8083</SpaProxyServerUrl>
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
 	<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <ImplicitUsings>enable</ImplicitUsings>
