@@ -10,12 +10,11 @@
   "profiles": {
     "MyWebServices": {
       "commandName": "Project",
-      "commandLineArgs": "--urls https://*:443",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
       },
-      "applicationUrl": "https://localhost:5083;http://192.168.1.2:80"
+      "applicationUrl": "https://localhost:7074;http://localhost:5074"
     },
     "IIS Express": {
       "commandName": "IISExpress",

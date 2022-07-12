@@ -1,9 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Observable, Observer } from "rxjs";
-import { UserPattern } from './UserPattern';
 import { UserSettings } from './UserSettings';
-import { API_URL } from "../userEnvironment";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: "app-home",
@@ -24,7 +22,7 @@ export class HomeComponent implements OnInit {
 
   private file: File = new File([], "");
 
-  public constructor(private readonly http: HttpClient) { }
+  public constructor(private readonly http: HttpClient, private snackBar: MatSnackBar) { }
 
   public async ngOnInit() {
     this.getSettings();
@@ -45,8 +43,17 @@ export class HomeComponent implements OnInit {
       this.isFileEmpty = false;
       this.fileName = this.file.name;
 
+      this.openInfoSnackBar("Файл выбран.");
     }
     else console.log("error", this.file);
+  }
+
+  private openErrorSnackBar(message: string) {
+    this.snackBar.open(message, 'Закрыть');
+  }
+
+  private openInfoSnackBar(message: string) {
+    this.snackBar.open(message)._dismissAfter(3 * 1000);
   }
 
   public onPatternChange(): void {
@@ -57,10 +64,13 @@ export class HomeComponent implements OnInit {
     this.isProcessing = true;
     this.convertedText = "";
 
+    this.openInfoSnackBar("Обработка файла...");
     this.convertText();
 
     this.isProcessing = false;
     this.isFileEmpty = true;
+
+    this.openInfoSnackBar("Файл обработан.");
   }
 
   private convertText(): void {
@@ -73,10 +83,13 @@ export class HomeComponent implements OnInit {
       redirect: "follow"
     };
 
-    fetch(API_URL + "/api/v1/WordConvert/process-file/" + this.selectedPatternId, (requestOptions) as any)
+    fetch("/api/v1/WordConvert/process-file/" + this.selectedPatternId, (requestOptions) as any)
       .then(response => response.text())
       .then(result => this.convertedText = result)
-      .catch(error => console.log('error', error));
+      .catch(error => {
+        console.log('error', error);
+        this.openErrorSnackBar(error)
+      });
   }
 
   private getSettings(): void {
@@ -85,7 +98,7 @@ export class HomeComponent implements OnInit {
       redirect: 'follow',
     };
 
-    fetch(API_URL + "/api/v1/WordConvert/settings", (requestOptions) as any)
+    fetch("/api/v1/WordConvert/settings", (requestOptions) as any)
       .then(text => text.json())
       .then((settings: UserSettings) => {
         this.userSettings = settings;
@@ -93,5 +106,10 @@ export class HomeComponent implements OnInit {
   }
 
   private saveSettings(): void {
+  }
+
+  public copyText() {
+    navigator.clipboard.writeText(this.convertedText);
+    this.openInfoSnackBar("Текст скопирован.");
   }
 }

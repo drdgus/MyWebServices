@@ -19,11 +19,11 @@ namespace MyWebServices.Controllers
         }
 
         [HttpPost("process-file/{patternId}")]
-        public IActionResult Post(IFormFile File, int patternId)
+        public IActionResult Post(IFormFile file, int patternId)
         {
-            if (File.Length == 0) return BadRequest("Пустой файл.");
+            if (file.Length == 0) return BadRequest("Пустой файл.");
 
-            var stream = File.OpenReadStream();
+            var stream = file.OpenReadStream();
             var memoryStream = new MemoryStream();
             while (true)
             {
