@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyWebServices.Core.DataAccess.Entities;
 using MyWebServices.Core.DataAccess.Repositories;
 using MyWebServices.Core.Models;
 using MyWebServices.Core.Services;
@@ -46,10 +47,10 @@ namespace MyWebServices.Controllers
         }
 
         [HttpPatch("settings/save")]
-        public IActionResult Patch(UserSettings userSettings)
+        public IActionResult Patch(UserSettingsEntity userSettingsEntity)
         {
 
-            return Ok("NotImplementedMethod");
+            return Ok(_userRepository.UpdateUserSettings(userSettingsEntity, 1));
         }
     }
 }

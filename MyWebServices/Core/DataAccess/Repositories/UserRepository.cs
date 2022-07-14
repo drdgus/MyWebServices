@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyWebServices.Core.DataAccess.Entities;
 using MyWebServices.Core.Models;
 
 namespace MyWebServices.Core.DataAccess.Repositories
@@ -50,14 +51,23 @@ namespace MyWebServices.Core.DataAccess.Repositories
             {
                 UserPatterns = settingsEntity.UserPatterns,
                 SharedCustomUserElements = settingsEntity.SharedCustomUserElements,
-                CutElement = settingsEntity.CutElement,
                 TextLengthBeforeCut = settingsEntity.TextLengthBeforeCut,
+                CutElement = settingsEntity.CutElement,
                 ParagraphElement = settingsEntity.ParagraphElement,
                 ParagraphCenterAlignClass = settingsEntity.ParagraphCenterAlignClass,
                 ListElement = settingsEntity.ListElement,
             };
 
             return userSettings;
+        }
+
+        public async Task UpdateUserSettings(UserSettingsEntity userSettingsEntity, int userId)
+        {
+            var settings = _context.UsersSettings.AsNoTracking().Single(u => u.Id == userId);
+            userSettingsEntity.UserId = settings.UserId;
+            userSettingsEntity.Id = settings.Id;
+            _context.UsersSettings.Update(userSettingsEntity);
+            await _context.SaveChangesAsync();
         }
     }
 }

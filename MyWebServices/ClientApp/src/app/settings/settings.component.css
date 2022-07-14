@@ -1,0 +1,7 @@
+td {
+  padding-right: 8px;
+}
+
+mat-form-field{
+  min-width: 300px;
+}

@@ -52,12 +52,12 @@ namespace MyWebServices.Core.Models
             var elements = new StringBuilder();
             UserPattern.CustomUserElementsForPattern.ForEach(el =>
             {
-                if (el.ElementSotringOrder == CustomUserElement.SortingOrder.BeforeText) elements.AppendLine(el.Value);
+                if (el.ElementSortingOrder == CustomUserElement.SortingOrder.BeforeText) elements.AppendLine(el.Value);
             });
 
             SharedCustomUserElements.ForEach(el =>
             {
-                if (el.ElementSotringOrder == CustomUserElement.SortingOrder.BeforeText) elements.AppendLine(el.Value);
+                if (el.ElementSortingOrder == CustomUserElement.SortingOrder.BeforeText) elements.AppendLine(el.Value);
             });
             return elements.ToString();
         }
@@ -67,12 +67,12 @@ namespace MyWebServices.Core.Models
             var elements = new StringBuilder();
             UserPattern.CustomUserElementsForPattern.ForEach(el =>
             {
-                if (el.ElementSotringOrder == CustomUserElement.SortingOrder.AfterText) elements.AppendLine(el.Value);
+                if (el.ElementSortingOrder == CustomUserElement.SortingOrder.AfterText) elements.AppendLine(el.Value);
             });
 
             SharedCustomUserElements.ForEach(el =>
             {
-                if (el.ElementSotringOrder == CustomUserElement.SortingOrder.AfterText) elements.AppendLine(el.Value);
+                if (el.ElementSortingOrder == CustomUserElement.SortingOrder.AfterText) elements.AppendLine(el.Value);
             });
             return elements.ToString();
         }
@@ -82,7 +82,7 @@ namespace MyWebServices.Core.Models
             var elements = new List<TemplateElement>();
             UserPattern.CustomUserElementsForPattern.ForEach(el =>
             {
-                if (el.ElementSotringOrder == null)
+                if (el.ElementSortingOrder == null)
                 {
                     elements.Add(
                         new TemplateElement

@@ -1,82 +1,65 @@
-<div>
-  <div class="d-grid gap-2 w-50">
+<div class="container">
 
-    <span>Стандартные элементы</span>
+  <p>Стандартные элементы</p>
+  <table>
+    <tr>
+      <td>
+        <mat-form-field appearance="fill">
+          <mat-label>Количество символов перед CUT</mat-label>
+          <input name="textLengthBeforeCut" matInput [(ngModel)]="userSettings.textLengthBeforeCut">
+        </mat-form-field>
+      </td>
 
-    <div class="form-floating">
-      <input type="number" class="form-control" [(ngModel)]="userSettings.textLengthBeforeCut" id="floatingInputtextLengthBeforeCut" placeholder="_" value="_">
-      <label for="floatingInputtextLengthBeforeCut">Количество символов перед CUT</label>
-    </div>
+      <td>
+        <mat-form-field appearance="fill">
+          <mat-label>CUT</mat-label>
+          <input name="cutElement" matInput [(ngModel)]="userSettings.cutElement">
+        </mat-form-field>
+      </td>
 
-    <div class="form-floating">
-      <input type="text" class="form-control" [(ngModel)]="userSettings.cutElement" id="floatingInputcutElement" placeholder="_" value="_">
-      <label for="floatingInputcutElement">CUT</label>
-    </div>
+      <td>
+        <mat-form-field appearance="fill">
+          <mat-label>Абзац</mat-label>
+          <input name="paragraphElement" matInput [(ngModel)]="userSettings.paragraphElement">
+        </mat-form-field>
+      </td>
 
-    <div class="form-floating">
-      <input type="text" class="form-control" [(ngModel)]="userSettings.paragraphElement" id="floatingInputparagraphElement" placeholder="_" value="_">
-      <label for="floatingInputparagraphElement">Абзац</label>
-    </div>
-
-    <div class="form-floating">
-      <input type="text" class="form-control" [(ngModel)]="userSettings.paragraphCenterAlignClass" id="floatingInputparagraphCenterAlignClass" placeholder="_" value="_">
-      <label for="paragraphCenterAlignClass">Класс для абзацев по центру</label>
-    </div>
-
-    <div class="form-floating">
-      <input type="text" class="form-control" [(ngModel)]="userSettings.listElement" id="floatingInputlistElement" placeholder="_" value="_">
-      <label for="floatingInputlistElement">Нумерованный\маркированный список</label>
-    </div>
-  </div>
-
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th scope="col">Название</th>
-        <th scope="col">Значение</th>
-        <th scope="col">Шаблон</th>
-        <th scope="col">Приоритет</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let customUserElement of userSettings.sharedCustomUserElements">
-        <th scope="row">
-          <input type="text" value="{{customUserElement.name}}"/>
-        </th>
-        <td>
-          <input type="text" value="{{customUserElement.value}}"/>
-        </td>
-        <td>
-          <input type="text" value="{{customUserElement.templateValue}}"/>
-        </td>
-        <td>
-          {{customUserElement.elementSotringOrder}}
-        </td>
-      </tr>
-    </tbody>
+      <td>
+        <mat-form-field appearance="fill">
+          <mat-label>Класс для абзацев по центру</mat-label>
+          <input name="paragraphCenterAlignClass" matInput [(ngModel)]="userSettings.paragraphCenterAlignClass">
+        </mat-form-field>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <mat-form-field appearance="fill">
+          <mat-label>Нумерованный\маркированный список</mat-label>
+          <input name="listElement" matInput [(ngModel)]="userSettings.listElement">
+        </mat-form-field>
+      </td>
+    </tr>
   </table>
 
   <div>
-    <span>Общие для всех шаблонов элементы</span>
+    <span>Общие элементы для всех шаблонов</span>
 
-    <div *ngFor="let customUserElement of userSettings.sharedCustomUserElements">
-      <customUserElement [element]="customUserElement"></customUserElement>
-    </div>
+    <app-customElements [elements]="userSettings.sharedCustomUserElements"></app-customElements>
   </div>
 
   <div>
     <span>Шаблоны</span>
+
     <select class="form-select" [(ngModel)]="selectedPatternId" (change)="onPatternChange()">
       <option *ngFor="let userPattern of userSettings.userPatterns" [value]="userPattern.id">{{userPattern.name}}</option>
     </select>
 
     <div class="mt-1">
       <span>Кастомные элементы для шаблона</span>
-      <div *ngFor="let customUserElement of selectedPattern?.customUserElementsForPattern">
-        <customUserElement [element]="customUserElement"></customUserElement>
-      </div>
+
+      <app-customElements [elements]="selectedPattern.customUserElementsForPattern"></app-customElements>
     </div>
   </div>
 
-  <button (click)="saveSettings()">Save settings</button>
+  <button class="btn btn-primary" (click)="saveSettings()">Save settings</button>
 </div>

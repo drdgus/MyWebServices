@@ -3,26 +3,25 @@
     <div class="col-6 p-0">
       <div class="input-group">
         <input type="file" class="form-control" (change)="onFileSelected($event)">
-        <button class="input-group-text btn" [class.btn-outline-primary]="isFileEmpty" [class.btn-primary]="!isFileEmpty" [disabled]="isFileEmpty" (click)="processFile()">Обработать</button>
+        <button
+          class="input-group-text btn"
+          [class.btn-outline-primary]="isFileEmpty"
+          [class.btn-primary]="!isFileEmpty"
+          [disabled]="isFileEmpty"
+          (click)="processFile()">Обработать
+        </button>
       </div>
     </div>
     <div class="col-2"></div>
     <div class="col input-group p-0">
       <select class="form-select" [(ngModel)]="selectedPatternId" (change)="onPatternChange()">
-        <option *ngFor="let userPattern of userSettings.userPatterns" [value]="userPattern.id">{{userPattern.name}}</option>
+        <option *ngFor="let userPattern of userSettings.userPatterns"
+                [value]="userPattern.id">{{userPattern.name}}</option>
       </select>
       <button class="btn btn-outline-secondary" [routerLink]="['/settings']">
         <i class="bi bi-gear"></i>
       </button>
     </div>
-    <span class="text-danger p-0 mt-1">{{info || ""}}</span>
   </div>
 </div>
-<div class="position-relative" style="margin-top: 10px">
-  <button class="btn btn-secondary position-absolute end-0" (click)="copyText()" style="height: 30px; padding: 0 10px; margin: 4px 22px 0 0">
-    <i class="bi bi-clipboard"></i>
-  </button>
-  <div style="max-height: 600px; overflow-y: scroll">
-    <pre style="padding:10px; white-space: pre-wrap; min-width: 100%; min-height: 400px; /* Gray 6 */ background: #F2F2F2; box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 4px;">{{convertedText}}</pre>
-  </div>
-</div>
+<app-converted-text [text]="convertedText"></app-converted-text>

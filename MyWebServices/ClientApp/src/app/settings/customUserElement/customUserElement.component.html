@@ -1,32 +1,37 @@
-<div>
-  <div class="row g-2 mb-1">
-    <div class="col-md">
+<div class="row">
+  <table mat-table [dataSource]="elements" class="mat-elevation-z8">
 
-      <div class="form-floating">
-        <input type="text" class="form-control" [(ngModel)]="element.name" id="floatingInputName" placeholder="Name" value="Name">
-        <label for="floatingInputName">Название</label>
-      </div>
-    </div>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Название </th>
+      <td mat-cell *matCellDef="let element">
+        <input name="cutElement" matInput [(ngModel)]="element.name">
+      </td>
+    </ng-container>
 
-    <div class="col-md">
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef> Значение </th>
+      <td mat-cell *matCellDef="let element">
+        <input name="cutElement" matInput [(ngModel)]="element.value">
+      </td>
+    </ng-container>
 
-      <div class="form-floating">
-        <input type="text" class="form-control" [(ngModel)]="element.templateValue" id="floatingInputTemplate" placeholder="$$Template" value="$$Template">
-        <label for="floatingInputTemplate">Заменяемый шаблон</label>
-      </div>
-    </div>
-  </div>
+    <ng-container matColumnDef="templateValue">
+      <th mat-header-cell *matHeaderCellDef> Шаблон </th>
+      <td mat-cell *matCellDef="let element">
+        <input name="cutElement" matInput [(ngModel)]="element.templateValue">
+      </td>
+    </ng-container>
 
-  <div class="form-floating mb-3">
-    <input type="text" class="form-control" [(ngModel)]="element.value" id="floatingInputValue" placeholder="<div>...</div>" value="<div>...</div>">
-    <label for="floatingInputValue">Значение</label>
-  </div>
+    <ng-container matColumnDef="elementSortingOrder">
+      <th mat-header-cell *matHeaderCellDef> Приоритет </th>
+      <td mat-cell *matCellDef="let element">
+        <select class="form-select" [(ngModel)]="element.elementSortingOrder">
+          <option *ngFor="let sortingOrder of sortingOrders" [value]="sortingOrder">{{sortingOrder == 0 ? "Перед текстом" : "После текста" }}</option>
+        </select>
+      </td>
+    </ng-container>
 
-
-
-  <span>Положение в тексте</span>
-  <select [disabled]="element.withoutTemplate">
-    <option>Перед текстом</option>
-    <option>После текста</option>
-  </select>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 </div>

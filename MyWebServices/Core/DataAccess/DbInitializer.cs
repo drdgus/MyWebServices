@@ -41,7 +41,7 @@ namespace MyWebServices.Core.DataAccess
                                 {
                                     Name = "Ссылка на оф сайт пожарной части Богучан",
                                     Value = "URL TO Firehouse Site before text.",
-                                    ElementSotringOrder = CustomUserElement.SortingOrder.BeforeText
+                                    ElementSortingOrder = CustomUserElement.SortingOrder.BeforeText
                                 },
                                 new CustomUserElement
                                 {
@@ -57,13 +57,13 @@ namespace MyWebServices.Core.DataAccess
                         new CustomUserElement
                         {
                             Name = "Картинка перед текстом",
-                            ElementSotringOrder = CustomUserElement.SortingOrder.BeforeText,
+                            ElementSortingOrder = CustomUserElement.SortingOrder.BeforeText,
                             Value = "<img class='photo' src='https://44-563-webapps-f21.github.io/webapps-f21-assignment-6-AbdulRehmanSayeed/owl.png' alt='owlImg'>"
                         },
                         new CustomUserElement
                         {
                             Name = "Альбом",
-                            ElementSotringOrder = CustomUserElement.SortingOrder.AfterText,
+                            ElementSortingOrder = CustomUserElement.SortingOrder.AfterText,
                             Value = "<div class='Gallery'><a href='ссылка на альбом'>Фотоальбом</a></div>"
                         }
                     },

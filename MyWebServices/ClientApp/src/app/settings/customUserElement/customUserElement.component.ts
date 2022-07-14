@@ -1,8 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input } from '@angular/core';
 import {CustomUserElement} from "../../home/CustomUserElement";
+import {SortingOrder} from "../../home/SortingOrder";
 
 @Component({
-  selector: 'customUserElement',
+  selector: 'app-customElements',
   templateUrl: './customUserElement.component.html',
   styleUrls: ['./customUserElement.component.scss'],
   inputs: ['element']
@@ -10,9 +11,11 @@ import {CustomUserElement} from "../../home/CustomUserElement";
 
 export class CustomUserElementComponent
 {
-  @Input()
-  public element: CustomUserElement = new CustomUserElement();
+  @Input("elements") elements!: CustomUserElement[];
 
-  constructor() {  }
+  public displayedColumns: string[] = ['name', 'value', 'templateValue', 'elementSortingOrder'];
+  sortingOrders: any = Object.keys(SortingOrder).slice(0, Object.keys(SortingOrder).length / 2);
+
+  constructor(){ }
 }
 

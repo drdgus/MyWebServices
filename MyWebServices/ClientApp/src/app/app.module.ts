@@ -17,6 +17,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from "@angular/material/input";
 import {MatSortModule} from "@angular/material/sort";
+import { ConvertedTextComponent } from './home/converted-text/converted-text/converted-text.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import {MatSortModule} from "@angular/material/sort";
     NavMenuComponent,
     HomeComponent,
     SettingsComponent,
-    CustomUserElementComponent
+    CustomUserElementComponent,
+    ConvertedTextComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
