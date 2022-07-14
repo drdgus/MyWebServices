@@ -20,15 +20,23 @@ namespace MyWebServices.Core.Services
         public string GetConvertedText()
         {
             var convertedText = new StringBuilder();
-            convertedText.AppendLine(_userSettings.GetElementsBeforeText());
+            convertedText.Append(_userSettings.GetElementsBeforeText());
 
             _wordDocument.BodyElements
                 .ToList()
-                .ForEach(el => convertedText.AppendLine(ConvertElement(el)));
+                .ForEach(el =>
+                {
+                    var text = ConvertElement(el);
+                    if (text != string.Empty)
+                        convertedText.AppendLine(text);
+                });
 
-            convertedText.AppendLine(_userSettings.GetElementsAfterText());
+            convertedText.Append(_userSettings.GetElementsAfterText());
 
-            _userSettings.GetTemplateElements().ForEach(templateEl => convertedText.Replace(templateEl.TemplateValue, templateEl.Value));
+            _userSettings.GetTemplateElements().ForEach(templateEl =>
+            {
+                convertedText.Replace(templateEl.TemplateValue, templateEl.Value);
+            });
 
             return convertedText.ToString();
         }

@@ -29,9 +29,9 @@ namespace MyWebServices.Core.Models
             if (string.IsNullOrWhiteSpace(classes) == false)
                 paragraph = Regex.Replace(paragraph, "class='*'", $"class='{classes} ");
 
-            paragraph = Regex.Replace(paragraph, @"{\$ParagraphText\$}", text);
+            paragraph = Regex.Replace(paragraph, @"{\$ParagraphText\$}", "--new Paragraph Text--");
 
-            return paragraph;
+            return paragraph.Replace("--new Paragraph Text--", text);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace MyWebServices.Core.Models
             {
                 if (el.ElementSortingOrder == CustomUserElement.SortingOrder.AfterText) elements.AppendLine(el.Value);
             });
-            return elements.ToString();
+            return elements.Remove(elements.Length - 2, 2).ToString();
         }
 
         public List<TemplateElement> GetTemplateElements()

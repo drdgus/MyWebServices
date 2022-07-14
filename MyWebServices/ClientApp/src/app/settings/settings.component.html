@@ -43,6 +43,7 @@
 
   <div>
     <span>Общие элементы для всех шаблонов</span>
+    <button class="btn btn-outline-success" (click)="addSharedElement()">Добавить</button>
 
     <app-customElements [elements]="userSettings.sharedCustomUserElements"></app-customElements>
   </div>
@@ -56,10 +57,13 @@
 
     <div class="mt-1">
       <span>Кастомные элементы для шаблона</span>
+      <button class="btn btn-outline-success" (click)="addElementForPattern()">Добавить</button>
 
       <app-customElements [elements]="selectedPattern.customUserElementsForPattern"></app-customElements>
     </div>
   </div>
+
+  <p class="alert-info mt-2">Кастомные элементы из шаблона имеют приоритет над общими элементами.</p>
 
   <button class="btn btn-primary" (click)="saveSettings()">Save settings</button>
 </div>

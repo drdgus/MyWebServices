@@ -66,8 +66,48 @@ namespace MyWebServices.Core.DataAccess.Repositories
             var settings = _context.UsersSettings.AsNoTracking().Single(u => u.Id == userId);
             userSettingsEntity.UserId = settings.UserId;
             userSettingsEntity.Id = settings.Id;
+
             _context.UsersSettings.Update(userSettingsEntity);
             await _context.SaveChangesAsync();
+
+            //var settings = _context.UsersSettings.AsNoTracking()
+            //    .Include(i => i.UserPatterns)
+            //    .Include(u => u.SharedCustomUserElements)
+            //    .Single(u => u.Id == userId);
+
+            //settings.UserPatterns
+            //    .ForEach(u => u.CustomUserElementsForPattern = _context.CustomUserElements
+            //        .Where(el => el.UserPatternId == u.Id)
+            //        .ToList());
+
+            //userSettingsEntity.UserId = settings.UserId;
+            //userSettingsEntity.Id = settings.Id;
+
+            //var newSharedCustomElements =  userSettingsEntity.SharedCustomUserElements.Where(i =>
+            //    settings.SharedCustomUserElements.Contains(i) == false);
+
+            //var oldUserPatterns = settings.UserPatterns;
+            //var newUserPatterns = userSettingsEntity.UserPatterns;
+
+            //var newPatternsCustomElements = new List<CustomUserElement>();
+
+            //for (var i = 0; i < oldUserPatterns.Count; i++)
+            //{
+            //    var newElements = newUserPatterns[i].CustomUserElementsForPattern
+            //        .Where(elem => oldUserPatterns[i].CustomUserElementsForPattern
+            //            .Contains(elem) == false);
+            //    newPatternsCustomElements.AddRange(newElements);
+            //}
+
+            //await _context.CustomUserElements.AddRangeAsync(newSharedCustomElements);
+            //await _context.CustomUserElements.AddRangeAsync(newPatternsCustomElements);
+
+            //settings = _context.UsersSettings.AsNoTracking().Single(u => u.Id == userId);
+            //userSettingsEntity.SharedCustomUserElements = settings.SharedCustomUserElements;
+            //userSettingsEntity.UserPatterns = settings.UserPatterns;
+
+            //_context.UsersSettings.Update(userSettingsEntity);
+            //await _context.SaveChangesAsync();
         }
     }
 }

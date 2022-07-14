@@ -14,8 +14,12 @@ export class CustomUserElementComponent
   @Input("elements") elements!: CustomUserElement[];
 
   public displayedColumns: string[] = ['name', 'value', 'templateValue', 'elementSortingOrder'];
-  sortingOrders: any = Object.keys(SortingOrder).slice(0, Object.keys(SortingOrder).length / 2);
+  sortingOrders: string[];
 
-  constructor(){ }
+  constructor()
+  {
+    const orders = Object.keys(SortingOrder);
+    this.sortingOrders = orders.filter((n, i) => orders.indexOf(n) === i);
+  }
 }
 

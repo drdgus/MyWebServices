@@ -5,6 +5,7 @@ import { UserPattern } from '../home/UserPattern';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SortingOrder} from "../home/SortingOrder";
 import {EnumValue} from "@angular/compiler-cli/src/ngtsc/partial_evaluator";
+import {CustomUserElement} from "../home/CustomUserElement";
 
 @Component({
   selector: 'app-home',
@@ -57,5 +58,18 @@ export class SettingsComponent implements OnInit
             console.log("saveSettings error: " + JSON.stringify(error))
             this.openErrorSnackBar("Ошибка сохранения настроек.")
       });
+  }
+
+  addSharedElement() {
+    this.userSettings.sharedCustomUserElements.push(new CustomUserElement());
+    this.userSettings.sharedCustomUserElements = new Array<CustomUserElement>().concat(this.userSettings.sharedCustomUserElements);
+  }
+
+  addElementForPattern() {
+    const newElement = new CustomUserElement();
+    newElement.userPatternId = this.selectedPatternId;
+    this.selectedPattern.customUserElementsForPattern.push(newElement)
+    this.selectedPattern.customUserElementsForPattern = new Array<CustomUserElement>().concat(this.selectedPattern.customUserElementsForPattern);
+    console.log(this.selectedPattern.customUserElementsForPattern);
   }
 }

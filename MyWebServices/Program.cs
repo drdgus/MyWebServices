@@ -4,6 +4,7 @@ using MyWebServices.Core.DataAccess;
 using System.Text;
 using MyWebServices.Core.DataAccess.Repositories;
 using System;
+using System.Text.Json.Serialization;
 
 //var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -12,16 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddCors(options =>
-{
-    //options.AddPolicy(name: MyAllowSpecificOrigins,
-    //    builder =>
-    //    {
-    //        builder.WithOrigins("https://paragraphs.drdgus.keenetic.pro/", 
-    //            "https://api.drdgus.keenetic.pro");
-    //    });
-});
+builder.Services.AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddDbContext<ParagraphsDbContext>(options =>
   options.UseSqlite("Filename=paragraphs.db"));

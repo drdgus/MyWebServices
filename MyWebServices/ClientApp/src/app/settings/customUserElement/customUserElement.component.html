@@ -26,7 +26,7 @@
       <th mat-header-cell *matHeaderCellDef> Приоритет </th>
       <td mat-cell *matCellDef="let element">
         <select class="form-select" [(ngModel)]="element.elementSortingOrder">
-          <option *ngFor="let sortingOrder of sortingOrders" [value]="sortingOrder">{{sortingOrder == 0 ? "Перед текстом" : "После текста" }}</option>
+          <option *ngFor="let sortingOrder of sortingOrders" [value]="sortingOrder">{{sortingOrder == "BeforeText" ? "Перед текстом" : "После текста" }}</option>
         </select>
       </td>
     </ng-container>

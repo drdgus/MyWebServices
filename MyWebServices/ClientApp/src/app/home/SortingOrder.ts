@@ -1,4 +1,4 @@
 export enum SortingOrder {
-  BeforeText,
-  AfterText
+  BeforeText = "BeforeText",
+  AfterText = "AfterText"
 }
