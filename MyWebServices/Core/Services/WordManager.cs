@@ -1,5 +1,6 @@
 ﻿using MyWebServices.Core.Models;
 using NPOI.XWPF.UserModel;
+using System.Linq;
 using System.Text;
 
 namespace MyWebServices.Core.Services
@@ -13,7 +14,6 @@ namespace MyWebServices.Core.Services
         public WordManager(Stream stream, UserSettings userSettings)
         {
             _userSettings = userSettings;
-            stream.Position = 0;
             _wordDocument = new XWPFDocument(stream);
         }
 
@@ -37,6 +37,9 @@ namespace MyWebServices.Core.Services
             {
                 convertedText.Replace(templateEl.TemplateValue, templateEl.Value);
             });
+
+            if (string.Join("", convertedText.ToString().TakeLast(Environment.NewLine.Length)) == Environment.NewLine)
+                convertedText.Remove(convertedText.Length - Environment.NewLine.Length, Environment.NewLine.Length);
 
             return convertedText.ToString();
         }
@@ -111,19 +114,16 @@ namespace MyWebServices.Core.Services
             {
                 return true;
             }
-            else if (_convertedParagraphsInfo.CutElementInserted == false &&
-                    _convertedParagraphsInfo.TextLength + paragraph.ParagraphText.Length >= _userSettings.TextLengthBeforeCut &&
-                    _convertedParagraphsInfo.IsLastNumbering == false)
-            {
-                return true;
-            }
-            return false;
+
+            return _convertedParagraphsInfo.CutElementInserted == false &&
+                   _convertedParagraphsInfo.TextLength + paragraph.ParagraphText.Length >= _userSettings.TextLengthBeforeCut &&
+                   _convertedParagraphsInfo.IsLastNumbering == false;
         }
 
         private bool TryConvertToList(XWPFParagraph paragraph, out string text)
         {
             var strBuilder = new StringBuilder();
-            var isParagraphList = this.IsParagraphList(paragraph);
+            var isParagraphList = IsParagraphList(paragraph);
 
             if (paragraph.GetNumFmt() != null)
             {
@@ -136,7 +136,7 @@ namespace MyWebServices.Core.Services
                 return false;
             }
 
-            if (isParagraphList == true)
+            if (isParagraphList)
             {
                 if (_convertedParagraphsInfo.IsLastNumbering == false)
                 {

@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ParagraphsDbContext>(options =>
   options.UseSqlite("Filename=paragraphs.db"));
@@ -29,6 +30,11 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 using (var scope = app.Services.CreateScope())
 {
@@ -39,13 +45,7 @@ using (var scope = app.Services.CreateScope())
     DbInitializer.Initialize(context);
 }
 
-//app.UseCors(MyAllowSpecificOrigins);
-app.UseCors(cors =>
-{
-    cors.AllowAnyOrigin();
-    cors.AllowAnyHeader();
-    cors.AllowAnyMethod();
-});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

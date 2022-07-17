@@ -74,7 +74,13 @@ namespace MyWebServices.Core.Models
             {
                 if (el.ElementSortingOrder == CustomUserElement.SortingOrder.AfterText) elements.AppendLine(el.Value);
             });
-            return elements.Remove(elements.Length - 2, 2).ToString();
+
+            var result = elements.ToString();
+
+            if(result.Length != 0)
+                result = result.Remove(result.Length - 2, 2);
+
+            return result;
         }
 
         public List<TemplateElement> GetTemplateElements()

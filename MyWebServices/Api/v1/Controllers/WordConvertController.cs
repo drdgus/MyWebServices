@@ -24,20 +24,15 @@ namespace MyWebServices.Controllers
         {
             if (file.Length == 0) return BadRequest("Пустой файл.");
 
-            var stream = file.OpenReadStream();
-            var memoryStream = new MemoryStream();
-            while (true)
-            {
-                var b = stream.ReadByte();
-                if (b == -1) break;
-                memoryStream.WriteByte((byte)b);
-            }
-           
-            var wordManager = new WordManager(memoryStream, _userRepository.GetUserSettings(1, patternId));
-            var convertedText = wordManager.GetConvertedText();
+            var msWordItems = new MsWordReader().GetContent(file.OpenReadStream());
+            var wordTextConverter = new WordTextConverter(_userRepository.GetUserSettings(1, patternId));
+            
+            //var wordManager = new WordManager(file.OpenReadStream(), _userRepository.GetUserSettings(1, patternId));
+            //var convertedText = wordManager.GetConvertedText();
 
-            _logger.LogInformation($"File uploaded and converted. Converted text: {convertedText}");
-            return Ok(convertedText);
+            //return Ok(convertedText);
+
+            return Ok(wordTextConverter.Convert(msWordItems));
         }
 
         [HttpGet("settings")]
