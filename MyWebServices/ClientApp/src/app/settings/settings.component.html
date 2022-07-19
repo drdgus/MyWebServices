@@ -45,7 +45,7 @@
     <span>Общие элементы для всех шаблонов</span>
     <button class="btn btn-outline-success" (click)="addSharedElement()">Добавить</button>
 
-    <app-customElements [elements]="userSettings.sharedCustomUserElements"></app-customElements>
+    <app-customElements [customElements]="userSettings.sharedCustomUserElements" (elementChange)="elementChanged($event, -1)"></app-customElements>
   </div>
 
   <div>
@@ -59,7 +59,7 @@
       <span>Кастомные элементы для шаблона</span>
       <button class="btn btn-outline-success" (click)="addElementForPattern()">Добавить</button>
 
-      <app-customElements [elements]="selectedPattern.customUserElementsForPattern"></app-customElements>
+      <app-customElements [customElements]="selectedPattern.customUserElementsForPattern" (elementChange)="elementChanged($event, selectedPatternId)"></app-customElements>
     </div>
   </div>
 

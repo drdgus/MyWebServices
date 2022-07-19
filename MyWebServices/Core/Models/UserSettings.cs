@@ -59,6 +59,7 @@ namespace MyWebServices.Core.Models
             {
                 if (el.ElementSortingOrder == CustomUserElement.SortingOrder.BeforeText) elements.AppendLine(el.Value);
             });
+
             return elements.ToString();
         }
 

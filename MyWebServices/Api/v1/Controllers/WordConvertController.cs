@@ -26,11 +26,6 @@ namespace MyWebServices.Controllers
 
             var msWordItems = new MsWordReader().GetContent(file.OpenReadStream());
             var wordTextConverter = new WordTextConverter(_userRepository.GetUserSettings(1, patternId));
-            
-            //var wordManager = new WordManager(file.OpenReadStream(), _userRepository.GetUserSettings(1, patternId));
-            //var convertedText = wordManager.GetConvertedText();
-
-            //return Ok(convertedText);
 
             return Ok(wordTextConverter.Convert(msWordItems));
         }

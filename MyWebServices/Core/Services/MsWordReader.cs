@@ -73,6 +73,21 @@ namespace MyWebServices.Core.Services
                 });
             }
 
+            var first = textElements.First();
+            var last = textElements.Last();
+
+            if (first.Text == "\t")
+                textElements.Remove(first);
+
+            first = textElements.First();
+            first.Text = first.Text.TrimStart();
+
+            if (last.Text == "\t")
+                textElements.Remove(last);
+
+            last = textElements.Last();
+            last.Text = last.Text.TrimEnd();
+
             return textElements;
         }
 

@@ -6,7 +6,9 @@ namespace MyWebServices.Core.Services
     public class WordTextConverter
     {
         private readonly UserSettings _userSettings;
-        private TextStyle? _lastContentStyle = null;
+
+        private readonly StringBuilder _convertedTextBuilder = new();
+        private TextStyle? _lastContentStyle;
 
         public WordTextConverter(UserSettings userSettings)
         {
@@ -15,78 +17,133 @@ namespace MyWebServices.Core.Services
 
         public string Convert(IList<MsWordItem> wordItems)
         {
-            var convertedText = new StringBuilder();
+            SetUserElementsBeforeText();
+            ConvertText(wordItems);
+            SetUserElementsAfterText();
+            ReplaceUserTemplateElements();
 
-            var depth = 0;
+            return _convertedTextBuilder.ToString();
+        }
+
+        private void SetUserElementsBeforeText()
+        {
+            _convertedTextBuilder.Append(GetElementsBeforeText());
+        }
+
+        private void SetUserElementsAfterText()
+        {
+            _convertedTextBuilder.Append(GetElementsAfterText());
+        }
+
+        private void ReplaceUserTemplateElements()
+        {
+            _userSettings.GetTemplateElements().ForEach(templateEl =>
+            {
+                _convertedTextBuilder.Replace(templateEl.TemplateValue, templateEl.Value);
+            });
+        }
+
+        private void ConvertText(IList<MsWordItem> wordItems)
+        {
+            var cutElementInserted = false;
+            var currentContentLength = 0;
+            var listDepth = new List<string>();
+            var firstListItem = true;
+
             for (var i = 0; i < wordItems.Count; i++)
             {
                 var wordItem = wordItems[i];
 
                 if (wordItem.ItemType == ItemType.Paragraph)
-                    convertedText.AppendLine(ConvertToParagraph(wordItem));
+                {
+                    _convertedTextBuilder.AppendLine(ConvertToParagraph(wordItem));
+
+                    if (cutElementInserted == false)
+                    {
+                        currentContentLength += wordItem.ContentLength;
+
+                        if (i + 1 != wordItems.Count && currentContentLength + wordItems[i + 1].ContentLength >= _userSettings.TextLengthBeforeCut)
+                        {
+                            cutElementInserted = true;
+                            _convertedTextBuilder.AppendLine(_userSettings.CutElement);
+                        }
+                    }
+
+                    listDepth.Clear();
+                    firstListItem = true;
+                }
                 else
                 {
-                    if (i == 0)
-                    {
-                        convertedText.AppendLine($"<{GetMsListSign((MsWordList)wordItem)}>");
-                        convertedText.AppendLine(ConvertToListItem(wordItem));
-                        continue;
-                    }
+                    var listItem = (MsWordList)wordItem;
 
-                    if (wordItems[i - 1].ItemType == ItemType.Paragraph)
+                    if (listItem.Depth == listDepth.Count)
                     {
-                        convertedText.AppendLine($"<{GetMsListSign((MsWordList)wordItem)}>");
-                        convertedText.AppendLine(ConvertToListItem(wordItem));
-                        continue;
+                        SetListItem(listItem, ref firstListItem);
                     }
-
-                    if (i + 1 == wordItems.Count)
+                    else if (listItem.Depth > listDepth.Count)
                     {
-                        convertedText.AppendLine(ConvertToListItem(wordItem));
-                        for (int j = 0; j <= depth; j++)
+                        firstListItem = true;
+                        listDepth.Add(GetMsListSign(listItem));
+
+                        SetListItem(listItem, ref firstListItem);
+                    }
+                    else if (listItem.Depth < listDepth.Count)
+                    {
+                        for (int maxDepth = listDepth.Count - 1; maxDepth >= 0; maxDepth--)
                         {
-                            convertedText.AppendLine($"</{GetMsListSign((MsWordList)wordItem)}>");
+                            if (listItem.Depth < maxDepth + 1)
+                            {
+                                _convertedTextBuilder.AppendLine($"</{listDepth[maxDepth]}>");
+                                listDepth.RemoveAt(maxDepth);
+                            }
                         }
-                        continue;
+
+                        SetListItem(listItem, ref firstListItem);
                     }
 
-                    if (wordItems[i + 1].ItemType == ItemType.Paragraph)
+                    if (i + 1 == wordItems.Count || wordItems[i + 1].ItemType == ItemType.Paragraph)
                     {
-                        convertedText.AppendLine(ConvertToListItem(wordItem));
-
-                        for (int j = 0; j <= depth; j++)
+                        for (var j = 0; j < listDepth.Count + 1; j++)
                         {
-                            convertedText.AppendLine($"</{GetMsListSign((MsWordList)wordItem)}>");
-                        }
-                        continue;
-                    }
+                            if (j + 1 > listDepth.Count)
+                            {
+                                _convertedTextBuilder.AppendLine($"</{GetMsListSign(listItem)}>");
+                                continue;
+                            }
 
-                    if (((MsWordList)wordItems[i + 1]).Depth > ((MsWordList)wordItem).Depth)
-                    {
-                        convertedText.AppendLine(ConvertToListItem(wordItem));
-                        convertedText.AppendLine($"<{GetMsListSign((MsWordList)wordItems[i + 1])}>");
-                        depth++;
-                    }
-                    else if (((MsWordList)wordItems[i + 1]).Depth < ((MsWordList)wordItem).Depth)
-                    {
-                        convertedText.AppendLine(ConvertToListItem(wordItem));
-                        convertedText.AppendLine($"</{GetMsListSign((MsWordList)wordItem)}>");
-                        depth--;
-                    }
-                    else
-                    {
-                        convertedText.AppendLine(ConvertToListItem(wordItem));
+                            var listSign = listDepth[j];
+                            _convertedTextBuilder.AppendLine($"</{listSign}>");
+                        }
                     }
                 }
             }
+        }
 
-            return convertedText.ToString();
+        private string GetElementsBeforeText()
+        {
+            return _userSettings.GetElementsBeforeText();
+        }
+
+        private string GetElementsAfterText()
+        {
+            return _userSettings.GetElementsAfterText();
+        }
+
+        private void SetListItem(MsWordList listItem, ref bool firstListItem)
+        {
+            if (firstListItem)
+            {
+                firstListItem = false;
+                _convertedTextBuilder.AppendLine($"{GetMsListOpeningTag(listItem)}{Environment.NewLine}{ConvertToListItem(listItem)}");
+            }
+            else _convertedTextBuilder.AppendLine(ConvertToListItem(listItem));
         }
 
         private string ConvertToParagraph(MsWordItem wordItem)
         {
             //_userSettings.ParagraphElement;
-            return $"<p>{ConvertItemContent(wordItem)}</p>";
+            var alignmentClass = GetAlignmentClass(wordItem.Alignment);
+            return _userSettings.CreateParagraph(ConvertItemContent(wordItem), alignmentClass);
         }
 
         private string ConvertToListItem(MsWordItem wordItem)
@@ -135,7 +192,7 @@ namespace MyWebServices.Core.Services
                 if (item.Content.Count == i + 1)
                 {
                     if (_lastContentStyle != null && _lastContentStyle != TextStyle.Normal)
-                        strBuilder.Append($"{textElement.Text}</{GetTextStyleSign(textElement.Style)}>");
+                        strBuilder.Append($"</{GetTextStyleSign(textElement.Style)}>");
 
                     _lastContentStyle = null;
                 }
@@ -162,6 +219,23 @@ namespace MyWebServices.Core.Services
                 ListType.Bullet => "ul",
                 ListType.Number => "ol",
                 _ => "ul"
+            };
+        }
+
+        private string GetMsListOpeningTag(MsWordList wordList)
+        {
+            return $"<{_userSettings.GetListHeader(GetMsListSign(wordList))}>";
+        }
+
+        private string GetAlignmentClass(ContentAlignment alignment)
+        {
+            return alignment switch
+            {
+                ContentAlignment.Left => string.Empty,
+                ContentAlignment.Center => _userSettings.ParagraphCenterAlignClass,
+                ContentAlignment.Right => string.Empty,
+                ContentAlignment.Both => string.Empty,
+                _ => alignment.ToString()
             };
         }
     }

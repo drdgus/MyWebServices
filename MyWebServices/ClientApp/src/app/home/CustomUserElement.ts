@@ -5,7 +5,7 @@ export class CustomUserElement {
   public name: string = '';
   public value: string = '';
   public templateValue: string | null = null;
-  public elementSortingOrder: number | null = null;
+  public elementSortingOrder: string | null = null;
   public userPatternId: number | null = null;
 
   public withoutTemplate: boolean = (this.templateValue == null || this.templateValue?.length === 0 );
