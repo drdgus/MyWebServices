@@ -1,6 +1,4 @@
-﻿using MyWebServices.Core.Models;
-
-namespace MyWebServices.Core.Models
+﻿namespace MyWebServices.Core.Models
 {
     public class MsWordItem
     {

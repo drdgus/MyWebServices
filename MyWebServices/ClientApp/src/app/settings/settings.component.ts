@@ -19,20 +19,7 @@ export class SettingsComponent implements OnInit
   public selectedPattern: UserPattern = new UserPattern();
 
   public constructor(private readonly http: HttpClient, private snackBar: MatSnackBar, private userSettingsService: UserSettingsService) {
-    userSettingsService.getSettings().subscribe(settings => {
-      settings.sharedCustomUserElements.forEach(i => {
-        if(i.elementSortingOrder == null)
-          i.elementSortingOrder = SortingOrder.Template;
-      });
-
-      settings.userPatterns.forEach(p => {
-        p.customUserElementsForPattern.forEach(i => {
-          if(i.elementSortingOrder == null)
-            i.elementSortingOrder = SortingOrder.Template;
-        })
-      });
-      console.log(settings)
-
+    userSettingsService.getSettings().then(settings => {
       this.userSettings = settings;
       this.selectedPattern = this.userSettings.userPatterns[0];
       this.selectedPatternId = this.selectedPattern.id;
@@ -59,20 +46,8 @@ export class SettingsComponent implements OnInit
 
   public saveSettings(): void
   {
-    this.userSettings.sharedCustomUserElements.forEach(i => {
-      if(i.elementSortingOrder == SortingOrder.Template)
-        i.elementSortingOrder = null;
-    });
-
-    this.userSettings.userPatterns.forEach(p => {
-      p.customUserElementsForPattern.forEach(i => {
-        if(i.elementSortingOrder == SortingOrder.Template)
-          i.elementSortingOrder = null;
-      })
-    });
-
-    this.http.patch("/api/v1/WordConvert/settings/save", this.userSettings)
-      .subscribe(next => this.openInfoSnackBar("Настройки сохранены."),
+    this.userSettingsService.saveSettings()
+      .subscribe(() => this.openInfoSnackBar("Настройки сохранены."),
           error => {
             console.log("saveSettings error: " + JSON.stringify(error))
             this.openErrorSnackBar("Ошибка сохранения настроек.")
@@ -80,16 +55,21 @@ export class SettingsComponent implements OnInit
   }
 
   addSharedElement() {
-    this.userSettings.sharedCustomUserElements.push(new CustomUserElement());
+    const element = new CustomUserElement();
+    element.elementSortingOrder = SortingOrder.BeforeText;
+    this.userSettings.sharedCustomUserElements.push(element);
     this.userSettings.sharedCustomUserElements = new Array<CustomUserElement>().concat(this.userSettings.sharedCustomUserElements);
+    this.userSettingsService.addCustomElement(element);
   }
 
   addElementForPattern() {
     const selectedPattern = this.userSettings.userPatterns.find(p => p.id == this.selectedPatternId)!;
     const newElement = new CustomUserElement();
+    newElement.elementSortingOrder = SortingOrder.BeforeText;
     newElement.userPatternId = this.selectedPatternId;
     selectedPattern.customUserElementsForPattern.push(newElement)
     selectedPattern.customUserElementsForPattern = new Array<CustomUserElement>().concat(selectedPattern.customUserElementsForPattern);
+    this.userSettingsService.addCustomElement(newElement);
   }
 
   elementChanged($event: CustomUserElement[], patternId: number) {

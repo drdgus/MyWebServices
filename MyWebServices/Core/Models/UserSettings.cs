@@ -78,7 +78,7 @@ namespace MyWebServices.Core.Models
 
             var result = elements.ToString();
 
-            if(result.Length != 0)
+            if (result.Length != 0)
                 result = result.Remove(result.Length - 2, 2);
 
             return result;
@@ -87,9 +87,23 @@ namespace MyWebServices.Core.Models
         public List<TemplateElement> GetTemplateElements()
         {
             var elements = new List<TemplateElement>();
+
+            SharedCustomUserElements.ForEach(i =>
+            {
+                if (i.ElementSortingOrder == CustomUserElement.SortingOrder.Template)
+                {
+                    elements.Add(
+                        new TemplateElement
+                        {
+                            Value = i.Value,
+                            TemplateValue = i.TemplateValue
+                        });
+                }
+            });
+
             UserPattern.CustomUserElementsForPattern.ForEach(el =>
             {
-                if (el.ElementSortingOrder == null)
+                if (el.ElementSortingOrder == CustomUserElement.SortingOrder.Template)
                 {
                     elements.Add(
                         new TemplateElement

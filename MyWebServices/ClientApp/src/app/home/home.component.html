@@ -1,27 +1,23 @@
 <div class="container">
-  <div class="row">
-    <div class="col-6 p-0">
+  <div class="d-flex justify-content-between">
+    <div>
       <div class="input-group">
-        <input type="file" class="form-control" (change)="onFileSelected($event)">
-        <button
-          class="input-group-text btn"
-          [class.btn-outline-primary]="isFileEmpty"
-          [class.btn-primary]="!isFileEmpty"
-          [disabled]="isFileEmpty"
-          (click)="processFile()">Обработать
-        </button>
+        <input type="file" class="form-control" (change)="onFileSelected($event)" [disabled]="isProcessing">
+        <button class="btn btn-outline-primary" (click)="processFile()" [disabled]="isFileEmpty || isProcessing">Обработать</button>
       </div>
     </div>
-    <div class="col-2"></div>
-    <div class="col input-group p-0">
-      <select class="form-select" [(ngModel)]="selectedPatternId" (change)="onPatternChange()">
-        <option *ngFor="let userPattern of userSettings.userPatterns"
-                [value]="userPattern.id">{{userPattern.name}}</option>
-      </select>
-      <button class="btn btn-outline-secondary" [routerLink]="['/settings']">
-        <i class="bi bi-gear"></i>
-      </button>
+
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Шаблон</mat-label>
+        <mat-select class="form-select-sm" [disabled]="isProcessing" [(ngModel)]="selectedPatternId" (selectionChange)="onPatternChange()">
+          <mat-option *ngFor="let userPattern of userSettings.userPatterns"
+                      [value]="userPattern.id">
+            {{userPattern.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
+
+  <app-converted-text [text]="convertedText"></app-converted-text>
 </div>
-<app-converted-text [text]="convertedText"></app-converted-text>

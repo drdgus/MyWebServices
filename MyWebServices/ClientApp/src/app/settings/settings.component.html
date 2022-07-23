@@ -1,69 +1,61 @@
 <div class="container">
+  <button class="btn btn-outline-primary shadow-sm" (click)="saveSettings()">Сохранить настройки</button>
 
-  <p>Стандартные элементы</p>
-  <table>
-    <tr>
-      <td>
-        <mat-form-field appearance="fill">
-          <mat-label>Количество символов перед CUT</mat-label>
-          <input name="textLengthBeforeCut" matInput [(ngModel)]="userSettings.textLengthBeforeCut">
-        </mat-form-field>
-      </td>
-
-      <td>
-        <mat-form-field appearance="fill">
+  <div class="shadow mt-4 p-3 mb-5 rounded">
+    <h3 class="d-inline">Стандартные элементы</h3>
+    <div class="mt-4 row">
+      <div class="form-control col border-0">
+        <mat-form-field class="d-block" appearance="outline">
           <mat-label>CUT</mat-label>
           <input name="cutElement" matInput [(ngModel)]="userSettings.cutElement">
         </mat-form-field>
-      </td>
-
-      <td>
-        <mat-form-field appearance="fill">
+        <mat-form-field class="mt-3 d-block" appearance="outline">
+          <mat-label>Количество символов перед CUT</mat-label>
+          <input name="textLengthBeforeCut" matInput [(ngModel)]="userSettings.textLengthBeforeCut">
+        </mat-form-field>
+      </div>
+      <div class="form-control col border-0">
+        <mat-form-field class="d-block" appearance="outline">
           <mat-label>Абзац</mat-label>
           <input name="paragraphElement" matInput [(ngModel)]="userSettings.paragraphElement">
         </mat-form-field>
-      </td>
-
-      <td>
-        <mat-form-field appearance="fill">
+        <mat-form-field class="mt-3 d-block"  appearance="outline">
           <mat-label>Класс для абзацев по центру</mat-label>
           <input name="paragraphCenterAlignClass" matInput [(ngModel)]="userSettings.paragraphCenterAlignClass">
         </mat-form-field>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <mat-form-field appearance="fill">
+      </div>
+      <div class="form-control col border-0">
+        <mat-form-field appearance="outline">
           <mat-label>Нумерованный\маркированный список</mat-label>
           <input name="listElement" matInput [(ngModel)]="userSettings.listElement">
         </mat-form-field>
-      </td>
-    </tr>
-  </table>
-
-  <div>
-    <span>Общие элементы для всех шаблонов</span>
-    <button class="btn btn-outline-success" (click)="addSharedElement()">Добавить</button>
+      </div>
+    </div>
+  </div>
+  <div class="shadow mt-4 p-3 mb-5 rounded">
+    <div class="d-flex align-items-center justify-content-between">
+      <h3 class="m-0">Кастомные общие элементы</h3>
+      <button class="bg-success" mat-mini-fab (click)="addSharedElement()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <span class="p-2" style="color: #575757; font-size: 14px;">Для элемента который будет заменять значение необходимо установить приоритет <b>Замена</b>.</span>
 
     <app-customElements [customElements]="userSettings.sharedCustomUserElements" (elementChange)="elementChanged($event, -1)"></app-customElements>
   </div>
+  <div class="shadow mt-4 p-3 mb-5 rounded">
+    <div class="d-flex align-items-center justify-content-between">
+      <h3 class="m-0">Кастомные элементы по шаблонам</h3>
+      <button class="bg-success" mat-mini-fab (click)="addElementForPattern()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <span class="p-2" style="color: #575757; font-size: 14px;">Элементы из шаблонов устанавливаются после общих элементов.</span>
 
-  <div>
-    <span>Шаблоны</span>
-
-    <select class="form-select" [(ngModel)]="selectedPatternId" (change)="onPatternChange()">
+    <select class="form-select mt-4" [(ngModel)]="selectedPatternId" (change)="onPatternChange()">
       <option *ngFor="let userPattern of userSettings.userPatterns" [value]="userPattern.id">{{userPattern.name}}</option>
     </select>
 
-    <div class="mt-1">
-      <span>Кастомные элементы для шаблона</span>
-      <button class="btn btn-outline-success" (click)="addElementForPattern()">Добавить</button>
-
-      <app-customElements [customElements]="selectedPattern.customUserElementsForPattern" (elementChange)="elementChanged($event, selectedPatternId)"></app-customElements>
-    </div>
+    <app-customElements [customElements]="selectedPattern.customUserElementsForPattern" (elementChange)="elementChanged($event, selectedPatternId)"></app-customElements>
   </div>
-
-  <p class="alert-info mt-2">Кастомные элементы из шаблона имеют приоритет над общими элементами.</p>
-
-  <button class="btn btn-primary" (click)="saveSettings()">Save settings</button>
 </div>

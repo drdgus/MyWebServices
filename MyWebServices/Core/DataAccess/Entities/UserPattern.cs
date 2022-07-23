@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int UserSettingsEntityId { get; set; }
         public List<CustomUserElement> CustomUserElementsForPattern { get; set; }
     }
 }

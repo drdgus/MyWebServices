@@ -1,8 +1,16 @@
-<div class="position-relative" style="margin-top: 10px">
-  <button class="btn btn-secondary position-absolute end-0 copy-btn" (click)="copyText()">
-    <i class="bi bi-clipboard"></i>
-  </button>
-  <div class="converted-text-block">
-    <pre class="converted-text">{{text}}</pre>
+<div class="position-relative mt-2">
+  <div class="border border-1 converted-text-block">
+    <div class="position-absolute end-0">
+      <button class="btn btn-outline-light copy-btn" (click)="showConvertedHtml()">
+        <i [hidden]="renderedHtml" class="bi bi-file-earmark-image"></i>
+        <i [hidden]="!renderedHtml" class="bi bi-filetype-html"></i>
+      </button>
+      <button class="btn btn-outline-light copy-btn" (click)="copyText()">
+        <i class="bi bi-clipboard"></i>
+      </button>
+    </div>
+
+    <pre class="converted-text" [hidden]="renderedHtml">{{text}}</pre>
+    <div class="renderedHTML" [innerHTML]="styles + text" [hidden]="!renderedHtml"></div>
   </div>
 </div>

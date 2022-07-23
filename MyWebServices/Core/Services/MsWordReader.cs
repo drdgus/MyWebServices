@@ -1,6 +1,5 @@
 ﻿using MyWebServices.Core.Models;
 using NPOI.XWPF.UserModel;
-using System.IO;
 
 namespace MyWebServices.Core.Services
 {
@@ -22,13 +21,31 @@ namespace MyWebServices.Core.Services
 
         private void ParseContent()
         {
-            var paragraphs = _document.Paragraphs;
+            var bodyElements = _document.BodyElements;
 
-            foreach (var paragraph in paragraphs)
+            foreach (var bodyElement in bodyElements)
             {
-                if(paragraph.IRuns.Count == 0) continue;
-
                 MsWordItem item;
+                if (bodyElement.ElementType == BodyElementType.TABLE)
+                {
+                    var table = (XWPFTable)bodyElement;
+                    item = new MsWordItem()
+                    {
+                        ItemType = ItemType.Table,
+                        Content = GetTableContent(table),
+                        Alignment = ContentAlignment.Left,
+                    };
+                    _wordItems.Add(item);
+                    continue;
+                }
+
+                if (bodyElement.ElementType != BodyElementType.PARAGRAPH) continue;
+
+                var paragraph = (XWPFParagraph)bodyElement;
+
+                if (paragraph.IRuns.Count == 0) continue;
+
+
                 if (paragraph.NumLevelText == null)
                 {
                     item = new MsWordItem
@@ -91,9 +108,24 @@ namespace MyWebServices.Core.Services
             return textElements;
         }
 
-        private ContentAlignment GetAlignment(XWPFParagraph paragraph)
+        private List<TextElement> GetTableContent(XWPFTable table)
         {
-            return paragraph.Alignment switch
+            var textElements = new List<TextElement>();
+            var text = table.Text.Split('\n').SkipLast(1);
+            foreach (var item in text)
+            {
+                textElements.Add(new TextElement
+                {
+                    Style = TextStyle.Normal,
+                    Text = item
+                });
+            }
+
+            return textElements;
+        }
+
+        private ContentAlignment GetAlignment(XWPFParagraph paragraph)
+        {   return paragraph.Alignment switch
             {
                 ParagraphAlignment.LEFT => ContentAlignment.Left,
                 ParagraphAlignment.CENTER => ContentAlignment.Center,

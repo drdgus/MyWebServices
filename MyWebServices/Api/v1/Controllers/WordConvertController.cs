@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebServices.Core.DataAccess.Entities;
 using MyWebServices.Core.DataAccess.Repositories;
 using MyWebServices.Core.Models;
 using MyWebServices.Core.Services;
@@ -37,10 +36,10 @@ namespace MyWebServices.Controllers
         }
 
         [HttpPatch("settings/save")]
-        public IActionResult Patch(UserSettingsEntity userSettingsEntity)
+        public IActionResult Patch(UpdatedSettings updatedSettings)
         {
 
-            return Ok(_userRepository.UpdateUserSettings(userSettingsEntity, 1));
+            return Ok(_userRepository.UpdateUserSettings(updatedSettings, 1));
         }
     }
 }

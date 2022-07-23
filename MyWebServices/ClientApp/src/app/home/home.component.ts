@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { UserSettings } from './UserSettings';
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {UserSettingsService} from "../settings/user-settings.service";
 
 @Component({
   selector: "app-home",
@@ -20,10 +21,13 @@ export class HomeComponent implements OnInit {
 
   public convertedText: string = "";
 
-  public constructor(private readonly http: HttpClient, private snackBar: MatSnackBar) { }
+  public constructor(private readonly http: HttpClient, private snackBar: MatSnackBar, private settingsService: UserSettingsService) { }
 
   public async ngOnInit() {
-    this.getSettings();
+    this.settingsService.getSettings().then(settings => {
+      this.userSettings = settings;
+      this.selectedPatternId = this.userSettings.userPatterns[0].id;
+    })
   }
 
   public async onFileSelected(event: any): Promise<void> {
@@ -77,13 +81,6 @@ export class HomeComponent implements OnInit {
       this.openErrorSnackBar("Ошибка при обработке файла.");
       this.isProcessing = false;
       this.isFileEmpty = false;
-    });
-  }
-
-  private getSettings(): void {
-    this.http.get<UserSettings>("/api/v1/WordConvert/settings").subscribe(next => {
-      this.userSettings = next;
-      this.selectedPatternId = this.userSettings.userPatterns[0].id;
     });
   }
 }

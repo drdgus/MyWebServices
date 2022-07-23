@@ -3,5 +3,6 @@
 public enum ItemType
 {
     Paragraph,
+    Table,
     List
 }

@@ -11,6 +11,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>46e02089-256b-4f73-9bcf-b317b9b8c587</UserSecretsId>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

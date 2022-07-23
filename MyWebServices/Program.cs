@@ -1,13 +1,8 @@
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using MyWebServices.Core.DataAccess;
-using System.Text;
 using MyWebServices.Core.DataAccess.Repositories;
-using System;
+using System.Text;
 using System.Text.Json.Serialization;
-
-//var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +18,21 @@ builder.Services.AddTransient<UserRepository>();
 
 
 var app = builder.Build();
+
+if (app.Environment.IsProduction())
+{
+    var filePath = Path.Combine(AppContext.BaseDirectory, "wwwroot", "StylesForRenderedHTML.css");
+    if (File.Exists(filePath) == false)
+    {
+        File.WriteAllText(filePath, @".renderedHTML .centertext{
+    text-align: center;
+} 
+.renderedHTML table, .renderedHTML th, .renderedHTML td{
+    border: 1px solid black;
+    border-collapse: collapse;
+}");
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -1,5 +1,5 @@
-﻿using System.Text;
-using MyWebServices.Core.Models;
+﻿using MyWebServices.Core.Models;
+using System.Text;
 
 namespace MyWebServices.Core.Services
 {
@@ -54,9 +54,11 @@ namespace MyWebServices.Core.Services
             {
                 var wordItem = wordItems[i];
 
-                if (wordItem.ItemType == ItemType.Paragraph)
+                if (wordItem.ItemType == ItemType.Paragraph || wordItem.ItemType == ItemType.Table)
                 {
-                    _convertedTextBuilder.AppendLine(ConvertToParagraph(wordItem));
+                    if (wordItem.ItemType == ItemType.Paragraph)
+                        _convertedTextBuilder.AppendLine(ConvertToParagraph(wordItem));
+                    else _convertedTextBuilder.AppendLine(ConvertToTable(wordItem));
 
                     if (cutElementInserted == false)
                     {
@@ -144,6 +146,23 @@ namespace MyWebServices.Core.Services
             //_userSettings.ParagraphElement;
             var alignmentClass = GetAlignmentClass(wordItem.Alignment);
             return _userSettings.CreateParagraph(ConvertItemContent(wordItem), alignmentClass);
+        }
+
+        private string ConvertToTable(MsWordItem wordItem)
+        {
+            var table = new StringBuilder();
+            table.AppendLine("<table>");
+
+            wordItem.Content.ForEach(row =>
+            {
+                table.AppendLine("<tr>");
+                row.Text.Split('\t').ToList().ForEach(cell => table.AppendLine($"<td>{cell}</td>"));
+                table.AppendLine("</tr>");
+            });
+
+            table.Append("</table>");
+
+            return table.ToString();
         }
 
         private string ConvertToListItem(MsWordItem wordItem)

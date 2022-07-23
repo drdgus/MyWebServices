@@ -1,13 +1,9 @@
-﻿using System;
+﻿using MyWebServices.Core.DataAccess.Entities;
+using MyWebServices.Core.Models;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyWebServices.Core.DataAccess.Entities;
-using MyWebServices.Core.Models;
-using MyWebServices.Core.Services;
-using NUnit.Framework;
 
 namespace Paragraphs.UnitTests
 {

@@ -1,44 +1,34 @@
-<div class="row">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Название </th>
-      <td mat-cell *matCellDef="let element">
-        <input name="cutElement" matInput [(ngModel)]="element.name">
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="value">
-      <th mat-header-cell *matHeaderCellDef> Значение </th>
-      <td mat-cell *matCellDef="let element">
-        <input name="cutElement" matInput [(ngModel)]="element.value">
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="templateValue">
-      <th mat-header-cell *matHeaderCellDef> Шаблон </th>
-      <td mat-cell *matCellDef="let element">
-        <input name="cutElement" matInput [(ngModel)]="element.templateValue">
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="elementSortingOrder">
-      <th mat-header-cell *matHeaderCellDef> Приоритет </th>
-      <td mat-cell *matCellDef="let element">
-        <select class="form-select" [(ngModel)]="element.elementSortingOrder">
-          <option *ngFor="let sortingOrder of sortingOrders" [value]="sortingOrder">{{sortingOrder == "BeforeText" ? "Перед текстом" : (sortingOrder == "Template" ? "Шаблон" : "После текста") }}</option>
-        </select>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="del">
-      <th mat-header-cell *matHeaderCellDef>  </th>
-      <td mat-cell *matCellDef="let element">
-       <button class="btn btn-danger" (click)="removeElement(element)">Del</button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</div>
+<table class="table mt-4">
+  <thead>
+  <tr>
+    <th scope="col">Название</th>
+    <th scope="col">Значение</th>
+    <th scope="col">Заменяемое значение</th>
+    <th scope="col">Приоритет</th>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let row of dataSource">
+    <td>
+      <input type="text" [(ngModel)]="row.name">
+    </td>
+    <td>
+      <input type="text" [(ngModel)]="row.value">
+    </td>
+    <td>
+      <input type="text" [(ngModel)]="row.templateValue">
+    </td>
+    <td>
+      <select class="form-select" [(ngModel)]="row.elementSortingOrder">
+        <option *ngFor="let sortingOrder of sortingOrders" [value]="sortingOrder">{{sortingOrder == "BeforeText" ? "Перед текстом" : (sortingOrder == "Template" ? "Замена" : "После текста") }}</option>
+      </select>
+    </td>
+    <td>
+      <button class="btn btn-danger" (click)="removeElement(row)">
+        <i class="bi bi-trash"></i>
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</table>

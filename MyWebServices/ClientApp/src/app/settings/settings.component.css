@@ -5,3 +5,7 @@ td {
 mat-form-field{
   min-width: 300px;
 }
+
+h3{
+  border-bottom: 1px solid #d3d3d3;
+}

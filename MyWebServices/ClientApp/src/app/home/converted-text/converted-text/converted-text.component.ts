@@ -8,10 +8,25 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 })
 export class ConvertedTextComponent implements OnInit {
 
+  public renderedHtml: boolean = false;
+  public styles: string = "";
+
   @Input("text") text!: string;
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(private snackBar: MatSnackBar) {
+    this.addStyles();
+  }
 
   ngOnInit(): void {
+  }
+
+  private addStyles():void {
+    const head = document.getElementsByTagName('HEAD')[0];
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = 'StylesForRenderedHTML.css';
+
+    head.appendChild(link);
   }
 
   public copyText() {
@@ -21,5 +36,9 @@ export class ConvertedTextComponent implements OnInit {
 
   private openInfoSnackBar(message: string) {
     this.snackBar.open(message)._dismissAfter(3 * 1000);
+  }
+
+  showConvertedHtml() {
+    this.renderedHtml = !this.renderedHtml;
   }
 }

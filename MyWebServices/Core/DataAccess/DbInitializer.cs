@@ -8,7 +8,7 @@ namespace MyWebServices.Core.DataAccess
         {
             if (context.Users.Any())
             {
-                return;   // DB has been seeded
+                return;
             }
 
             var users = new User[]
@@ -25,16 +25,19 @@ namespace MyWebServices.Core.DataAccess
             {
                 new UserSettingsEntity
                 {
+                    Id = 1,
                     UserId = 1,
                     UserPatterns = new List<UserPattern>
                     {
                         new UserPattern
                         {
-                            Name = "Без доп. элементов"
+                              Name = "Без доп. элементов",
+                            UserSettingsEntityId = 1
                         },
                         new UserPattern
                         {
                             Name = "Пожарная безопасность",
+                            UserSettingsEntityId = 1,
                             CustomUserElementsForPattern = new List<CustomUserElement>
                             {
                                 new CustomUserElement
@@ -47,7 +50,8 @@ namespace MyWebServices.Core.DataAccess
                                 {
                                     Name = "Ссылка на документы школы",
                                     TemplateValue = "$$Documents",
-                                    Value = "URL TO Documents section."
+                                    Value = "URL TO Documents section.",
+                                    ElementSortingOrder = CustomUserElement.SortingOrder.Template
                                 }
                             }
                         }

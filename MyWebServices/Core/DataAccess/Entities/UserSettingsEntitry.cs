@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace MyWebServices.Core.DataAccess.Entities
+﻿namespace MyWebServices.Core.DataAccess.Entities
 {
     public class UserSettingsEntity
     {
@@ -8,7 +6,7 @@ namespace MyWebServices.Core.DataAccess.Entities
         public int UserId { get; set; }
 
         public List<UserPattern> UserPatterns { get; set; }
-        public List<CustomUserElement> SharedCustomUserElements { get; set;  }
+        public List<CustomUserElement> SharedCustomUserElements { get; set; }
 
         public int TextLengthBeforeCut { get; set; }
         public string CutElement { get; set; }

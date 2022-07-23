@@ -18,6 +18,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from "@angular/material/input";
 import {MatSortModule} from "@angular/material/sort";
 import { ConvertedTextComponent } from './home/converted-text/converted-text/converted-text.component';
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import {MatSelectModule} from "@angular/material/select";
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -29,12 +33,12 @@ import { ConvertedTextComponent } from './home/converted-text/converted-text/con
     ConvertedTextComponent
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'settings', component: SettingsComponent },
+      {path: '', component: HomeComponent, pathMatch: 'full'},
+      {path: 'settings', component: SettingsComponent},
     ]),
     BrowserAnimationsModule,
     MatSnackBarModule,
@@ -42,7 +46,11 @@ import { ConvertedTextComponent } from './home/converted-text/converted-text/con
     MatPaginatorModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSortModule
+    MatSortModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

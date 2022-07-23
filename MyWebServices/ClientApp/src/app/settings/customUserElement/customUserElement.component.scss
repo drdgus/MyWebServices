@@ -6,18 +6,23 @@ span{
 
 }
 
-td:first-of-type {
+/*td:first-of-type {
   padding: 0 14px 0 14px!important;
 }
 
 td {
   padding: 0 14px 0 0!important;
+}*/
+
+td{
+  vertical-align: middle;
 }
 
 td > input{
-  border: 1px solid #bbbbbb;
-  border-radius: 6px;
+  border: 1px solid #d3d3d3;
+  border-radius: 4px;
   padding: 2px 4px;
+  width: 100%;
 }
 
 table select{
