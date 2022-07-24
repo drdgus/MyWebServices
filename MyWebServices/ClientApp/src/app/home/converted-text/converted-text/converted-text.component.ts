@@ -9,9 +9,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class ConvertedTextComponent implements OnInit {
 
   public renderedHtml: boolean = false;
-  public styles: string = "";
 
-  @Input("text") text!: string;
+  @Input("text") text: string = "";
   constructor(private snackBar: MatSnackBar) {
     this.addStyles();
   }
@@ -29,9 +28,28 @@ export class ConvertedTextComponent implements OnInit {
     head.appendChild(link);
   }
 
-  public copyText() {
-    navigator.clipboard.writeText(this.text);
+  public copyText():void {
+    if (window.isSecureContext && navigator.clipboard) {
+      navigator.clipboard.writeText(this.text);
+    } else {
+      this.unsecuredCopyToClipboard();
+    }
+
     this.openInfoSnackBar("Текст скопирован.");
+  }
+
+  private unsecuredCopyToClipboard():void {
+    const textArea = document.createElement("textarea");
+    textArea.value = this.text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+    } catch (err) {
+      console.error('Unable to copy to clipboard', err);
+    }
+    document.body.removeChild(textArea);
   }
 
   private openInfoSnackBar(message: string) {
